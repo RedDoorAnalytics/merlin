@@ -1,0 +1,19 @@
+TITLE: `MERLIN' : mixed effects regression for linear and non-linear models
+
+DESCRIPTION/AUTHOR: merlin fits linear, non-linear and user-defined mixed effects regression models. merlin can fit multivariate 
+outcome models of any type, each of which could be repeatedly measured (longitudinal), with any number of levels, 
+and with any number of random effects at each level. Standard distributions/models available include the Bernoulli, 
+beta, gamma, Gaussian, linear quantile, negative binomial, ordinal, Poisson, and time-to-event/survival models include 
+the exponential, gompertz, Weibull, Royston-Parmar, general log hazard and general log cumulative hazard models. Interval censoring 
+and left truncation are supported for all survival models. merlin provides a flexible predictor syntax, allowing 
+the user to define variables, random effects, spline and fractional polynomial functions, functions of other 
+outcome models, and any interaction between each of them. Non-linear and time-dependent effects are seamlessly 
+incorporated into the predictor. merlin allows level-specific random effect distributions, either multivariate normal or t, which 
+are integrated out using either Gaussian quadrature or Monte-Carlo integration. The package also includes the galahad command 
+for obtaining predictions from a multi-state survival model, where transition models were estimated using merlin. See 
+https://www.mjcrowther.co.uk/software/merlin for detailed examples.
+
+Author: Michael J. Crowther, Red Door Analytics
+Support: email michael@reddooranalytics.se
+
+Requires: Stata version 15.1

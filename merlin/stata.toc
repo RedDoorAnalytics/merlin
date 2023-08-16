@@ -1,0 +1,3 @@
+v 3
+d Stata package for mixed effects regression for linear, non-linear models and user-defined models
+p merlin

@@ -1,0 +1,141 @@
+*! version 1.0.0 MJC
+
+local TS 	transmorphic scalar
+local RS 	real scalar
+local RC 	real colvector
+local RM 	real matrix
+local Pgml 	pointer(struct merlin_struct scalar) scalar
+local gml 	struct merlin_struct scalar
+
+version 14.2
+mata:
+
+//gf core function
+void merlin_gf(	`TS' M,
+                `RS' todo,
+                `RR' b,
+                `RC' lnfi,
+                `RM' G,
+                `RM' H)
+{
+	`gml' gml
+
+	gml  		= moptimize_util_userinfo(M,1)
+	gml.todo 	= todo
+	gml.myb 	= b
+	gml.survind     = 0
+	
+	merlin_xb(gml,b)			//linear predictors
+
+	if (gml.Nrelevels) 	{		//has random effects
+
+                //logl
+		gml.Pgml->lnfi1 = lnfi = merlin_logl_panels(1,gml)
+
+                //marginal ltruncation (survival)
+		if (gml.hasmargltrunc) {
+                        lnfi[gml.mltllindex,] = lnfi[gml.mltllindex,] :- 
+							merlin_ltrunc(gml)
+		}
+		
+		if (todo==0) return
+                        
+                        gml.survind = 0
+ 			merlin_score_panels(gml,lnfi,G)
+			if (todo==1) return
+	}
+	else {	                                //ob level model
+		if (gml.todo) {
+                        G = J(gml.N,gml.Nb,0)
+                        if (gml.todo==2) {
+                                H = J(gml.Nb,gml.Nb,0)
+                        }
+                }
+		lnfi = merlin_logl_ob(gml,G,H)	
+	}
+
+}
+
+`RC' merlin_logl_ob(`gml' gml, `RM' G, `RM' H)
+{
+	`RC' logl, index
+
+	gml.imputing 	= 0
+	logl 		= J(gml.N,1,0)
+	for (j=1;j<=gml.Nmodels;j++) {
+		gml.model 	= gml.modtoind = j
+		gml.survind = 0
+		if (gml.NotNull[j,1]) {
+			index = merlin_get_index(gml)
+			if (gml.hasweights[1]) {
+                                logl[index] = logl[index] :+ 
+                                                (*gml.Plnl[j])(gml,G,H) :* 
+                                                asarray(gml.weights,(1,j))
+			}
+                        else {
+                                logl[index] = logl[index] :+ 
+                                                (*gml.Plnl[j])(gml,G,H)
+                        }
+		}
+	}
+	
+	return(logl)
+	
+// 	if (gml.hasImputed) {
+// 		gml.imputing = 1
+// 		result = result :+ merlin_logl_impute(gml)
+// 	}
+// 	return(result)
+}
+
+`RC' merlin_logl_panels(`RS' index,	///	-level-
+			`gml' gml)	//	
+{
+	`RS' index2
+	`RM' res, panelindex
+
+	index2 = index+1
+	res = J(gml.Nobs[index,1],gml.ndim[index],0)
+
+	if (index<gml.Nrelevels) {
+		panelindex = asarray(gml.panelindexes,(index,1))
+		for (q=1;q<=gml.ndim[index];q++) {
+			gml.qind[1,index2] = q
+			res[,q] = panelsum(merlin_logl_panels(index2,gml),panelindex)
+		}
+	}
+	else {
+		for (j=1;j<=gml.Nmodels;j++) {
+			gml.model 	= gml.modtoind = j
+			gml.survind = 0
+			if (gml.NotNull[j,1]) {
+				res2 = (*gml.Plnl[j])(gml)
+				if (gml.hasweights[index2])	res2 = res2 :* asarray(gml.weights,(index2,j))
+				res = res :+ panelsum(res2,asarray(gml.panelindexes,(index,j)))
+			}
+		}
+	}
+
+	if (gml.adapt[index]) 	res = res :+ asarray(gml.aghlogl,index)
+	if (gml.usegh[index]) 	c   = rowmax(res :+ log(asarray(gml.baseGHweights,index)'))
+	else			c   = rowmax(res)
+	expres 	= exp(res :- c)
+
+	if (gml.adapt[index] | gml.todo) asarray(gml.Li_ip,gml.qind,expres) 
+
+	if (gml.usegh[index]) {			//GHQ
+		if (gml.hasweights[index]) 	return(asarray(gml.weights,(index,1)) :* (c :+ log(expres * asarray(gml.baseGHweights,index))))
+		else 				return(c :+ log(expres * asarray(gml.baseGHweights,index)))
+	}
+	else {					//MCI
+		if (gml.hasweights[index]) 	return(asarray(gml.weights,(index,1)) :* (c :+ log(quadrowsum(expres):/gml.ndim[index])))
+		else 				return(c :+ log(quadrowsum(expres):/gml.ndim[index]))	
+	}
+}
+
+`RM' merlin_get_H(struct mopt__struct scalar M)
+{
+	return(M.S.H)
+}
+
+end
