@@ -275,7 +275,7 @@ void merlin_setup(`SS' GML,`SS' touse)
 	merlin_setup_mleqns(gml)
 	merlin_setup_wrappers(gml)
 	merlin_starting_values(gml)
-	
+
 	//Done
 	swap(*pGML,gml)
 }

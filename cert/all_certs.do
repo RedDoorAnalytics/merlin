@@ -2,11 +2,12 @@
 // cert. script for merlin
 
 //source paths
-local drive /Users/Michael/
+local drive /Users/michael/My Drive/products
 cd "`drive'/merlin"
 adopath ++ "`drive'/merlin"
 adopath ++ "`drive'/merlin/merlin"
-adopath ++ "`drive'/merlin/stmerlin"
+adopath ++ "`drive'/stmerlin/stmerlin"
+
 
 //build mlib
 clear all
@@ -41,7 +42,7 @@ do ./cert/jf1.do
 //longitudinal
 do ./cert/level1.do
 
-//joint longitduinal-survival
+//joint longitudinal-survival
 do ./cert/bivariate_jm.do
 do ./cert/weighted_cumulative_jm.do
 do ./cert/jm_ltruncated.do
