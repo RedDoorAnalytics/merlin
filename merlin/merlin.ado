@@ -1,7 +1,10 @@
-*! version 2.4.0  16aug2023 MJC
+*! version 2.4.1  21nov2023 MJC
 
 /*
 History
+2.4.1
+- when eform was added to display results, misleading z-values and p-values were 
+  shown; now removed
 2.4.0
 - bhazard() with loglogistic, gamma, lognormal should've thrown an error as it 
   wasn't supported; now it is!
@@ -444,7 +447,7 @@ program Display
         local Nrelevels = `e(Nlevels)'-1
         
         if "`eform'"!="" {
-                local exp exp prob
+                local exp exp
         }
         
         local plus
