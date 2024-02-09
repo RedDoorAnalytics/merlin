@@ -2,7 +2,7 @@
 // cert. script for merlin
 
 //source paths
-local drive /Users/michael/My Drive/products
+local drive /Users/michael/My Drive/software
 cd "`drive'/merlin"
 adopath ++ "`drive'/merlin"
 adopath ++ "`drive'/merlin/merlin"

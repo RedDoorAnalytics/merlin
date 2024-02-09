@@ -253,12 +253,12 @@ mata:
 
 `RM' merlin_addhazard_s(`gml' gml, `RC' t)
 {
-	return(exp(-merlin_loghazard_ch(gml,t)))
+	return(exp(-merlin_addhazard_ch(gml,t)))
 }
 
 `RM' merlin_addhazard_cdf(`gml' gml, `RC' t)
 {
-	return(1:-merlin_loghazard_s(gml,t))
+	return(1:-merlin_addhazard_s(gml,t))
 }
 
 end

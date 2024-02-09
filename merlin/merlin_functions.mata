@@ -919,12 +919,12 @@ void merlin_error(`SS' text)
 	
 }
 
-`RM' merlin_ps(		`RC' x,			///
-					`RR' knots, 	///
-					`RS' degree,	///
-					`RS' Nbasis,	///
-					`RS' hasint		///
-					)
+`RM' merlin_ps(	`RC' x,		///
+		`RR' knots, 	///
+		`RS' degree,	///
+		`RS' Nbasis,	///
+		`RS' hasint	///
+		)
 {
 	splines = J(rows(x),Nbasis,0)
 	

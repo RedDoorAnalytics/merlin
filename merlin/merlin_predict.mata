@@ -23,17 +23,16 @@ void merlin_predict(`SS' object, `SS' newvar, `SS' touse, `SS' stat, `SS' predty
 {
 	`gml' gml
 	swap(gml,*findexternal(object))
-
+	
 	merlin_predict_setup(gml,stat,touse)
 	stand	= st_local("standardise")!=""
-	
+
 	if 	(stat=="reffects") 	pred = merlin_predict_blups(gml)
 	else if (stat=="reses") 	pred = merlin_predict_blups(gml,1)
 	else {
 		pf 	= merlin_p_getpf(gml,stat)
 		pred 	= merlin_predict_core(gml,pf,predtype,stand)
 	}
-
 	id = st_addvar("double",tokens(newvar))
 	if (stand & !gml.issurv[gml.model])	{
 		st_store(1,id,pred)
