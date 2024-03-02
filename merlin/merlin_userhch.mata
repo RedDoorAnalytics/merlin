@@ -23,22 +23,26 @@ mata:
 
 `RM' merlin_userhaz_logh(`gml' gml, `RC' t)
 {	
-	mod	= gml.model
+	mod = gml.model
 	haz = (*gml.Puserst[mod,1])(gml,t)
-	if 		(gml.hasbh[mod,1]) 	logh = log(haz :+ merlin_util_bhazard(gml))
-	else if (gml.hasbh[mod,2]) 	logh = log(haz :* merlin_util_bhazard(gml))
-	else 						logh = log(haz)
+	if 	(gml.hasbh[mod,1]) {
+		logh = log(haz :+ merlin_util_bhazard(gml))
+	}
+	else if (gml.hasbh[mod,2]) {
+		logh = log(haz :* merlin_util_bhazard(gml))
+	}
+	else 	logh = log(haz)
 	return(logh)
 }
 
 `RM' merlin_userhaz_ch(`gml' gml, `RC' t, | `RC' t0)
 {	
 	nobs 	= rows(t)
-	ch 		= J(nobs,1,0)
+	ch 	= J(nobs,1,0)
 	Ngq 	= gml.chip
-	gq 		= merlin_gq(Ngq,"legendre")
-	qp		= t :/ 2 :* J(nobs,1,gq[,1]') :+ t:/2
-	qw		= t :/ 2 :* J(nobs,1,gq[,2]')
+	gq 	= merlin_gq(Ngq,"legendre")
+	qp	= t :/ 2 :* J(nobs,1,gq[,1]') :+ t:/2
+	qw	= t :/ 2 :* J(nobs,1,gq[,2]')
 	if (args()==2) {
 		for (q=1;q<=Ngq;q++) {
 			ch = ch :+ (*gml.Puserst[gml.model,1])(gml,qp[,q]) :* qw[,q]

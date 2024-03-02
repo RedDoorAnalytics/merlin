@@ -13,11 +13,11 @@ local PC 	pointer colvector
 local PM 	pointer matrix
 local SC 	string colvector
 
-version 15.1
+version 17
 
 mata:
 
-real matrix merlin_stexcess_logh(`gml' gml, real matrix t)
+real matrix merlin_stexcess_logh(`gml' gml, `RM' t)
 {
 	haz_expect = exp(merlin_util_xzb(gml,t))
         haz_excess = exp(merlin_util_xzb_mod(gml,2,t))

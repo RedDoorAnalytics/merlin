@@ -1,5 +1,5 @@
 //local drive Z:/
-local drive /Users/Michael/Documents
+local drive /Users/michael/My Drive/software
 cd "`drive'/merlin"
 adopath ++ "./merlin"
 adopath ++ "./stmerlin"
@@ -52,21 +52,21 @@ end
 	
 	
 merlin 	(y time fp(time, pow(2)) time#M2[id]@1 M1[id]@1, family(gaussian) timevar(time))	///
-		(stime trt mf(userelement), family(w, failure(died)) timevar(stime))	        ///
+		(stime trt EV[y], family(w, failure(died)) timevar(stime))	        ///
 		, cov(unstr)
 
 // predict refs2*, reffects
 // predict s0, surv fixedonly outcome(2)
 // predict s1, surv fixedonly outcome(2) ci
 // predict s2, surv fitted outcome(2)
-range tvar1 0 5 20
-predict s32, surv fitted outcome(2) panel(1) timevar(tvar1) devcode7(bc928r72crncfye98fyqc9r398ry)
-predict s33, surv fitted outcome(2) panel(1) timevar(tvar1) //devcode7(bc928r72crncfye98fyqc9r398ry)
-
-// //longitudinal
 // range tvar1 0 5 20
-// predict l1, mu outcome(1) fixedonly ci
-// predict l2, mu outcome(1) fitted ci
+// predict s32, surv fitted outcome(2) panel(1) timevar(tvar1) devcode7(bc928r72crncfye98fyqc9r398ry)
+// predict s33, surv fitted outcome(2) panel(1) timevar(tvar1) devcode7(bc928r72crncfye98fyqc9r398ry)
+//
+// // //longitudinal
+// range tvar1 0 5 20
+// predict l1, mu outcome(1) fixedonly 
+// predict l2, mu outcome(1) fitted 
 
 
 forvalues i=2/5 {

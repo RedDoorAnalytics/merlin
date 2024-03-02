@@ -121,12 +121,12 @@ mata:
 		gml.survind = 0
 		
 		//indexes for covariates and baseline equations
-		NHbs 		= asarray(gml.NHbs,model)
-		sindex1 	= (1..NHbs[1]) :+ gml.skip[model]
-		sindex2		= ((NHbs[1]+1)..(NHbs[1]+NHbs[2])) :+ gml.skip[model]
+		NHbs 	= asarray(gml.NHbs,model)
+		sindex1 = (1..NHbs[1]) :+ gml.skip[model]
+		sindex2	= ((NHbs[1]+1)..(NHbs[1]+NHbs[2])) :+ gml.skip[model]
 		
 		//core
-		x  			= merlin_util_xz(gml)
+		x  	= merlin_util_xz(gml)
 
 		//exactly observed events -> hazard function
 		gml.survind = 1

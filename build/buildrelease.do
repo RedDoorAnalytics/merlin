@@ -7,19 +7,19 @@
 //!!
 
 local drive /Users/Michael
-cd `drive'/merlin/
+cd "`drive'/My Drive/software/merlin/"
 
 local includemata       = 0
 
 //=======================================================================================================================//
 
 //build new release -> current version up is 2.3.0
-local newversion 2_4_0
+local newversion 2_4_1
 if `includemata' {
         local newversion `newversion'_mata
 }
 cap mkdir ./release/version_`newversion'
-local fdir /Users/Michael/merlin/release/version_`newversion'/
+local fdir ./release/version_`newversion'/
 
 //=======================================================================================================================//
 
@@ -44,10 +44,10 @@ copy ./build/merlin_details.txt `fdir', replace
 	copy ./merlin/merlin_postestimation.sthlp `fdir', replace
 
 //stmerlin
-	
-	copy ./stmerlin/stmerlin.ado `fdir', replace
-	copy ./stmerlin/stmerlin.sthlp `fdir', replace
-	copy ./stmerlin/stmerlin_postestimation.sthlp `fdir', replace
+//	
+// 	copy ./stmerlin/stmerlin.ado `fdir', replace
+// 	copy ./stmerlin/stmerlin.sthlp `fdir', replace
+// 	copy ./stmerlin/stmerlin_postestimation.sthlp `fdir', replace
 	
 //exptorcs
 
