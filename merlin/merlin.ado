@@ -1,7 +1,11 @@
-*! version 2.4.1  21nov2023 MJC
+*! version 2.4.2  15mar2024
 
 /*
 History
+2.4.2
+- bug fix; survival or failure predictions after estimation of a 
+  family(addhazard) model returned predictions assuming the model had been 
+  fitted on the log hazard scale, rather than the hazard. Now fixed.
 2.4.1
 - when eform was added to display results, misleading z-values and p-values were 
   shown; now removed
