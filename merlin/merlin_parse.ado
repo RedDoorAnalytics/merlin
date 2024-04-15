@@ -157,6 +157,7 @@ program merlin_parse, rclass
                 local noresidual`i' `s(noresidual)'
                 local dapmodel`i' `s(dapmodel)'
                 local forcenocons `s(noconstant)'
+		local firth `s(firth)'
                 
                 opts_exclusive "`noconstant' `constant'"
                 local constant`i' "`noconstant'`constant'"
@@ -323,6 +324,7 @@ program merlin_parse, rclass
 	return local modellabels `"`modellabels'"'	
         return local mftodrop 	`mftodrop'
         return local mfzeros 	"`zeros'"
+	return local firth "`firth'"
 end
 
 program ParseDist, sclass
@@ -353,6 +355,7 @@ program ParseDist, sclass
                 Quantile(string) 	///
                 NORESIDual		/// gp
                 REFFAILure(string)      /// notdoc
+		FIRTH			///
                 *			/// rp aft opts
         ]
         sreturn local failure `failure'
@@ -593,6 +596,7 @@ program ParseDist, sclass
         sreturn local re 		`"`re'"'
         sreturn local noresidual 	`"`noresidual'"'
         sreturn local noconstant 	`nocons'
+	sreturn local firth	   	"`firth'"
 end
 
 program ParseVars, sclass

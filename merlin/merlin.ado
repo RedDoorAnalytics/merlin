@@ -361,6 +361,7 @@ program Fit, eclass sortpreserve
         local mlfrom    `"`r(mlfrom)'"'
         local mlzeros	`"`r(mlzeros)'"'
         local modellabels `"`r(modellabels)'"'
+	local firth 	"`r(firth)'"
         if "`mlcns'" != "" {
                 local cnsopt constraint(`mlcns')
         }
@@ -419,6 +420,13 @@ program Fit, eclass sortpreserve
                 
         }
         
+	if "`firth'"!="" {
+		di ""
+		di as text "Refining variance-covariance matrix"
+		ereturn repost V = firthV
+		capture mat drop firthV
+	}
+	
         ereturn local predict   merlin_p
         ereturn local from = "`mlfrom'"!=""
         ereturn local hasopts = `hasopts'

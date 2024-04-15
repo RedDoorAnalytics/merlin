@@ -1,17 +1,17 @@
 *! version 1.0.0 ?????2016
 
-local gml 		struct merlin_struct scalar
-local pgml		pointer(struct merlin_struct scalar) scalar
-local TR 		transmorphic
-local RS 		real scalar
-local RC 		real colvector
-local SS 		string scalar
-local PS 		pointer scalar
-local RR 		real rowvector
-local RM 		real matrix
-local PC 		pointer colvector
-local PM 		pointer matrix
-local SC 		string colvector
+local gml 	struct merlin_struct scalar
+local pgml	pointer(struct merlin_struct scalar) scalar
+local TR 	transmorphic
+local RS 	real scalar
+local RC 	real colvector
+local SS 	string scalar
+local PS 	pointer scalar
+local RR 	real rowvector
+local RM 	real matrix
+local PC 	pointer colvector
+local PM 	pointer matrix
+local SC 	string colvector
 
 version 14.1
 
@@ -19,6 +19,8 @@ mata:
 
 `RM' merlin_logl_cox(`gml' gml, `RM' S, `RM' H)
 {	
+ 	if (gml.firth) return(merlin_logl_cox_firth(gml,S,H))
+	
 	model 	= gml.model
 	y 	= merlin_util_depvar(gml)
 	Nobs	= merlin_get_nobs(gml)

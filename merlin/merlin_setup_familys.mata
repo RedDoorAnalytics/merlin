@@ -165,7 +165,8 @@ void merlin_setup_cox(`gml' gml)
 {	
 	gml.survind		= 0
 	gml.nocox		= 1	
-	
+	gml.firth		= st_local("firth")!=""
+
 	for (mod=1;mod<=gml.Nmodels;mod++) {	
 	
 		if (gml.failures[1,mod]!="") {
