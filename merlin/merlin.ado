@@ -2,6 +2,10 @@
 
 /*
 History
+
+Dev
+- Cox model with Firth correction added; family(cox, firth ...)
+
 2.4.2
 - bug fix; survival or failure predictions after estimation of a 
   family(addhazard) model returned predictions assuming the model had been 
