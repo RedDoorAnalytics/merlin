@@ -361,17 +361,17 @@ mata:
 
 `RM' merlin_logl_weibull_ml(`gml' gml)
 {	
-	model 		= gml.model
-	y 		= merlin_util_depvar(gml)
-	Nobs		= merlin_get_nobs(gml,model)
-	hast		= gml.istimedep[model,1]
-        haslt		= gml.hasltrunc[model]
-	hasbh		= gml.hasbh[model,1]
-	logl 		= J(Nobs,gml.ndim[gml.Nrelevels],0)
+	model 	= gml.model
+	y 	= merlin_util_depvar(gml)
+	Nobs	= merlin_get_nobs(gml,model)
+	hast	= gml.istimedep[model,1]
+        haslt	= gml.hasltrunc[model]
+	hasbh	= gml.hasbh[model,1]
+	logl 	= J(Nobs,gml.ndim[gml.Nrelevels],0)
 
 	//core
-	xb		= merlin_util_xzb(gml)
-	gam		= merlin_util_dap(gml,1)
+	xb	= merlin_util_xzb(gml)
+	gam	= merlin_util_dap(gml,1)
 
 	//====================================================================//
 	// log likelihood

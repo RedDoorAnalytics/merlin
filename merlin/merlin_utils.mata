@@ -129,21 +129,28 @@ mata:
 				
 				Xindex 		= cmpxix[c,1]..cmpxix[c,2]
 				Bindex 		= cmpbix[c,1]..cmpbix[c,2]
-				NX			= cols(Xindex)
+				NX		= cols(Xindex)
 				eltype	 	= asarray(gml.elindex,(mod,c))
 				contrib 	= 0
 				
 				//random effects must be handled first
 				for (el=1; el<=Nels[c]; el++) {
 					if (eltype[el]==2) {											//random effect
-						xb2		= J(nobs,1,0)
+						xb2	= J(nobs,1,0)
 						xb2base = x[,Xindex] :* gml.myb[,Bindex]
-// 						x[,Xindex]
 						for (re=1;re<=NX;re++) {
-							if (gml.fixedonly==0) xb2 = xb2 :+ xb2base[,re] :* merlin_xz_b(gml,c,el,re)
-							else if (gml.fixedonly==2) xb2 = xb2 :+ xb2base[,re] :* merlin_xz_blups(gml,c,el,re)		//-> for fitted predictions
-							else if (gml.fixedonly==3) xb2 = xb2 :+ xb2base[,re] :* merlin_xz_specblups(gml,c,el,re)	//-> for fitted predictions
-							//fixedonly are 0 already
+							if (gml.fixedonly==0) {
+								xb2 = xb2 :+ xb2base[,re] :* merlin_xz_b(gml,c,el,re)
+							}
+							else if (gml.fixedonly==2) {
+								//-> for fitted predictions
+								xb2 = xb2 :+ xb2base[,re] :* merlin_xz_blups(gml,c,el,re)
+							}
+							else if (gml.fixedonly==3) {
+								//-> for one fitted predictions
+								xb2 = xb2 :+ xb2base[,re] :* merlin_xz_specblups(gml,c,el,re)
+							}
+							//fixedonly == 1 are 0 already
 							contrib = 1
 						}
 					}
