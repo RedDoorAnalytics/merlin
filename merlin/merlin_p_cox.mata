@@ -20,7 +20,7 @@ mata:
 `RM' merlin_p_cox_h0(`GMLS' gml)
 {	
 	model 	= gml.model
-	y 		= merlin_util_depvar(gml)
+	y 	= merlin_util_depvar(gml)
 	haslt	= gml.hasltrunc[model]
 	haz 	= J(merlin_get_nobs(gml,model),1,0)
 
@@ -34,39 +34,38 @@ mata:
 	//xb at all survival/censoring times
 	gml.survind = 0
 
-	if (!gml.istimedep[model,1]) {								//time-independent
-
-		expxb2 		= exp(merlin_util_xzb(gml,y[,1]))
+	if (!gml.istimedep[model,1]) {	//time-independent
+		expxb2 	= exp(merlin_util_xzb(gml,y[,1]))
 		if (haslt) {
 			for (i=1;i<=Nfails;i++) {
-				atriskid 			= selectindex((y[index1[i],1] :<= y[,1]) :& (y[index1[i],1] :> y[,3]))
-				D					= sum(y[index1[i],1] :== select(y[,1],y[,2]:==1))
-				haz[index1[i],] 	= D:/quadcolsum(expxb2[atriskid,])
+				atriskid = selectindex((y[index1[i],1] :<= y[,1]) :& (y[index1[i],1] :> y[,3]))
+				D = sum(y[index1[i],1] :== select(y[,1],y[,2]:==1))
+				haz[index1[i],] = D:/quadcolsum(expxb2[atriskid,])
 			}
 		}
 		else {
 			for (i=1;i<=Nfails;i++) {
-				atriskid 			= selectindex(y[index1[i],1] :<= y[,1])
-				D					= sum(y[index1[i],1] :== select(y[,1],y[,2]:==1))
-				haz[index1[i],] 	= D:/quadcolsum(expxb2[atriskid,])
+				atriskid = selectindex(y[index1[i],1] :<= y[,1])
+				D = sum(y[index1[i],1] :== select(y[,1],y[,2]:==1))
+				haz[index1[i],] = D:/quadcolsum(expxb2[atriskid,])
 			}
 		}
 	}
-	else {																				//time-dependent
+	else {				//time-dependent
 		if (haslt) {
 			for (i=1;i<=Nfails;i++) {
-				atriskid 			= selectindex((y[index1[i],1] :<= y[,1]) :& (y[index1[i],1] :> y[,3]))
-				expxb2 				= exp(merlin_util_xzb(gml,J(merlin_get_nobs(gml,model),1,y[index1[i],1])))
-				D					= sum(y[index1[i],1] :== select(y[,1],y[,2]:==1))
-				haz[index1[i],] 	= D:/quadcolsum(expxb2[atriskid,])
+				atriskid = selectindex((y[index1[i],1] :<= y[,1]) :& (y[index1[i],1] :> y[,3]))
+				expxb2   = exp(merlin_util_xzb(gml,J(merlin_get_nobs(gml,model),1,y[index1[i],1])))
+				D	 = sum(y[index1[i],1] :== select(y[,1],y[,2]:==1))
+				haz[index1[i],] = D:/quadcolsum(expxb2[atriskid,])
 			}
 		}
 		else {
 			for (i=1;i<=Nfails;i++) {
-				atriskid 			= selectindex(y[index1[i],1] :<= y[,1])
-				expxb2 				= exp(merlin_util_xzb(gml,J(merlin_get_nobs(gml,model),1,y[index1[i],1])))
-				D					= sum(y[index1[i],1] :== select(y[,1],y[,2]:==1))
-				haz[index1[i],] 	= D:/quadcolsum(expxb2[atriskid,])
+				atriskid = selectindex(y[index1[i],1] :<= y[,1])
+				expxb2 	 = exp(merlin_util_xzb(gml,J(merlin_get_nobs(gml,model),1,y[index1[i],1])))
+				D	 = sum(y[index1[i],1] :== select(y[,1],y[,2]:==1))
+				haz[index1[i],] = D:/quadcolsum(expxb2[atriskid,])
 			}
 		}
 	}
@@ -75,7 +74,7 @@ mata:
 }
 
 `RM' merlin_p_cox_h(`GMLS' gml)
-{	
+{		
 	h0 = st_data(.,st_local("baseh"+strofreal(gml.model)),st_local("touse"))
 	gml.survind = 0
 	return(h0 :* exp(merlin_util_xzb(gml)))
@@ -83,20 +82,20 @@ mata:
 
 `RM' merlin_p_cox_ch0(`GMLS' gml)
 {	
-	h0 		= st_data(.,st_local("baseh"+strofreal(gml.model)),st_local("touse"))	
-	N		= gml.Nobs[gml.Nlevels,gml.model]
-	y 		= merlin_util_depvar(gml)
+	h0 = st_data(.,st_local("baseh"+strofreal(gml.model)),st_local("touse"))	
+	N  = gml.Nobs[gml.Nlevels,gml.model]
+	y  = merlin_util_depvar(gml)
 	
 	huniq 	= h0,y[,1]
 	huniq 	= uniqrows(select(huniq,y[,2]))
 	_sort(huniq,2)
 	chuniq 	= runningsum(huniq[,1])
 
-	ch		= J(N,1,.)
+	ch = J(N,1,.)
 	for (i=1;i<=N;i++) {
 		ind = max(selectindex(y[i,1]:>=huniq[,2]))
-		if (ind==.) ch[i] = 0							//censoring prior to first event
-		else 		ch[i] = chuniq[ind]
+		if (ind==.) ch[i] = 0	//censoring prior to first event
+		else ch[i] = chuniq[ind]
 	}
 
 	return(ch)
@@ -110,9 +109,9 @@ mata:
 	}
 	else {
 				
-		h0 		= st_data(.,st_local("baseh"+strofreal(gml.model)),st_local("touse"))
-		y 		= merlin_util_depvar(gml)
-		N		= gml.Nobs[gml.Nlevels,gml.model]
+		h0 = st_data(.,st_local("baseh"+strofreal(gml.model)),st_local("touse"))
+		y  = merlin_util_depvar(gml)
+		N  = gml.Nobs[gml.Nlevels,gml.model]
 		
 		huniq 	= h0,y[,1]
 		huniq 	= uniqrows(select(huniq,y[,2]))
@@ -171,9 +170,9 @@ mata:
 	}
 	else {
 		
-		h0 		= st_data(.,st_local("baseh"+strofreal(gml.model)),st_local("touse"))
-		y 		= merlin_util_depvar(gml)
-		N		= gml.Nobs[gml.Nlevels,gml.model]
+		h0 = st_data(.,st_local("baseh"+strofreal(gml.model)),st_local("touse"))
+		y  = merlin_util_depvar(gml)
+		N  = gml.Nobs[gml.Nlevels,gml.model]
 		
 		huniq 	= h0,y[,1]
 		huniq 	= uniqrows(select(huniq,y[,2]))
@@ -214,7 +213,7 @@ mata:
 			gml.model = mod
 			f = gml.familys[mod]
 			issurv = f=="cox"
-			if (issurv) modind 	= modind,gml.model
+			if (issurv) modind = modind,gml.model
 		}
 		Nsurvmodels = cols(modind)
 	}
@@ -356,7 +355,6 @@ mata:
 		Nsurvmodels = cols(modind)
 	}
 	else {
-	
 		modind = strtoreal(tokens(st_local("causes")))
 		Nsurvmodels = cols(modind)
 		for (mod=1; mod<=Nsurvmodels; mod++) {
@@ -366,110 +364,104 @@ mata:
 			issurv = f=="cox" 
 			if (!issurv) merlin_error("model "+strofreal(modm)+" in causes() is not a Cox model")
 		}
-
 	}
 	
 	//calc.
 	
-		gml.model 	= refmod
-		result 		= J(Nobs,1,0)
-		
-		bhvars = J(1,0,"")
-		for (i=1;i<=Nsurvmodels;i++) bhvars = bhvars,st_local("baseh"+strofreal(modind[i]))
-		
-		h0 = st_data(.,bhvars,st_local("touse"))
+	gml.model 	= refmod
+	result 		= J(Nobs,1,0)
+	
+	bhvars = J(1,0,"")
+	for (i=1;i<=Nsurvmodels;i++) bhvars = bhvars,st_local("baseh"+strofreal(modind[i]))
+	
+	h0 = st_data(.,bhvars,st_local("touse"))
 
-		//need outcome() hazard at unique event times, for all obs
-		ymain		= merlin_util_depvar(gml)
+	//need outcome() hazard at unique event times, for all obs
+	ymain		= merlin_util_depvar(gml)
+	N			= gml.Nobs[gml.Nlevels,gml.model]
+
+	huniqmain	= h0[,refmod],ymain[,1]
+	huniqmain 	= uniqrows(select(huniqmain,ymain[,2]))
+	_sort(huniqmain,2)
+	Nuniqmain	= rows(huniqmain)
+
+	if (!gml.istimedep[gml.model,1]) {
+		pred = exp(merlin_util_xzb(gml)) * huniqmain[,1]'
+	}
+	else {
+
+		pred 	= J(N,Nuniqmain,0)
+		t 		= asarray(gml.timevars,gml.model)
+		
+		for (i=1;i<=Nuniqmain;i++) {				
+			asarray(gml.timevars,gml.model,J(N,1,t[i]))
+			pred[,i] = merlin_util_xzb(gml)
+		}
+		pred = exp(pred) :* huniqmain[,1]'
+	}
+
+	//now need survival for all outcomes at all outcome times, for all obs
+
+	for (k=1; k<=Nsurvmodels; k++) {
+		
+		gml.model 	= modind[k]
+		y 			= merlin_util_depvar(gml)
 		N			= gml.Nobs[gml.Nlevels,gml.model]
-
-		huniqmain	= h0[,refmod],ymain[,1]
-		huniqmain 	= uniqrows(select(huniqmain,ymain[,2]))
-		_sort(huniqmain,2)
-		Nuniqmain	= rows(huniqmain)
-
+		huniq 		= h0[,gml.model],y[,1]
+		huniq 		= uniqrows(select(huniq,y[,2]))
+		_sort(huniq,2)
+		
 		if (!gml.istimedep[gml.model,1]) {
-			pred = exp(merlin_util_xzb(gml)) * huniqmain[,1]'
+			haz = exp(merlin_util_xzb(gml)) * huniq[,1]'
 		}
 		else {
-
-			pred 	= J(N,Nuniqmain,0)
+			Nuniq	= rows(huniq)
+			haz 	= J(N,Nuniq,0)
 			t 		= asarray(gml.timevars,gml.model)
 			
-			for (i=1;i<=Nuniqmain;i++) {				
+			for (i=1;i<=Nuniq;i++) {				
 				asarray(gml.timevars,gml.model,J(N,1,t[i]))
-				pred[,i] = merlin_util_xzb(gml)
+				haz[,i] = merlin_util_xzb(gml)
 			}
-			pred = exp(pred) :* huniqmain[,1]'
+			haz = exp(haz) :* huniq[,1]'
 		}
 
-		//now need survival for all outcomes at all outcome times, for all obs
-
-		for (k=1; k<=Nsurvmodels; k++) {
-			
-			gml.model 	= modind[k]
-			y 			= merlin_util_depvar(gml)
-			N			= gml.Nobs[gml.Nlevels,gml.model]
-			huniq 		= h0[,gml.model],y[,1]
-			huniq 		= uniqrows(select(huniq,y[,2]))
-			_sort(huniq,2)
-			
-			if (!gml.istimedep[gml.model,1]) {
-				haz = exp(merlin_util_xzb(gml)) * huniq[,1]'
-			}
-			else {
-				Nuniq	= rows(huniq)
-				haz 	= J(N,Nuniq,0)
-				t 		= asarray(gml.timevars,gml.model)
-				
-				for (i=1;i<=Nuniq;i++) {				
-					asarray(gml.timevars,gml.model,J(N,1,t[i]))
-					haz[,i] = merlin_util_xzb(gml)
-				}
-				haz = exp(haz) :* huniq[,1]'
-			}
-
-			_transpose(haz)
-			for (i=1;i<=N;i++) {
-				haz[,i] = runningsum(haz[,i])
-			}
-			_transpose(haz)
-			
-			if (gml.model==refmod) {
-				pred = pred :* exp(-haz)
-			}
-			else {
-
-				for (i=1;i<=Nuniqmain;i++) {
-					ind = max(selectindex(huniqmain[i,2]:>=huniq[,2]))
-					if (ind!=.) pred[,i] = pred[,i] :* exp(-haz[,ind])
-				}
-
-			}
-			
-		}	
-
-		//cif
-		_transpose(pred)
+		_transpose(haz)
 		for (i=1;i<=N;i++) {
-			pred[,i] = runningsum(pred[,i])
+			haz[,i] = runningsum(haz[,i])
 		}
-
-		//area under cif
+		_transpose(haz)
 		
-		
-		gml.model 	= refmod
-
-		cif = J(N,1,.)
-		for (i=1;i<=N;i++) {
-			index = max(selectindex(ymain[i,1]:>=huniqmain[,2]))
-			if (index==.) 	cif[i] = 0
-			else 			cif[i] = pred[index,i]
+		if (gml.model==refmod) {
+			pred = pred :* exp(-haz)
 		}
+		else {
+			for (i=1;i<=Nuniqmain;i++) {
+				ind = max(selectindex(huniqmain[i,2]:>=huniq[,2]))
+				if (ind!=.) pred[,i] = pred[,i] :* exp(-haz[,ind])
+			}
+		}
+		
+	}	
 
-		return(cif)
-			
+	//cif
+	_transpose(pred)
+	for (i=1;i<=N;i++) {
+		pred[,i] = runningsum(pred[,i])
+	}
+
+	//area under cif
+	
+	gml.model = refmod
+
+	cif = J(N,1,.)
+	for (i=1;i<=N;i++) {
+		index = max(selectindex(ymain[i,1]:>=huniqmain[,2]))
+		if (index==.) 	cif[i] = 0
+		else 	cif[i] = pred[index,i]
+	}
+
+	return(cif)
 }
-
 
 end
