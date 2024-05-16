@@ -1,6 +1,6 @@
 
 program merlin_p, sortpreserve
-        version 14.2
+        version 17
         local vv : display "version " string(_caller()) ":"
 
         tempname tname
@@ -12,7 +12,7 @@ program merlin_p, sortpreserve
 end
 
 program Predict
-        version 14.2
+        version 17
         gettoken GML 0 : 0
         syntax  anything(name=vlist)	      		                ///
                 [if] [in] [,                                            ///
@@ -395,7 +395,7 @@ program Predict
         //====================================================================================================================//
         //Preserve data for out of sample prediction etc.
         tempfile newvars 
-        preserve	
+        preserve
 
         if "`ci'"=="" {
 
