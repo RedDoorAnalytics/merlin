@@ -110,6 +110,7 @@
 				do "./merlin/merlin_p_userhch.mata"
 				do "./merlin/merlin_p_gp.mata"
 				do "./merlin/merlin_p_transprob.mata"
+				do "./merlin/merlin_p_stexcess.mata"
 				
 			mata: mata mlib create lmerlin, dir(.)
 			mata: mata mlib add    lmerlin *(), dir(.)

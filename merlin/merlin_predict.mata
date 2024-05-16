@@ -57,6 +57,11 @@ void merlin_predict_setup(`gml' gml, `SS' stat, `SS' touse)
 		merlin_predict_error_check(gml,stat)
 	}
 	
+	if (st_global("e(cmd2)")=="stexcess") {
+		gml.Puserst[1,3] = &merlin_p_stexcess_ch()
+		gml.Puserst[1,1] = &merlin_p_stexcess_h()
+	}
+	
 	//update N
 	if (st_local("npredict")=="") {
 		gml.N = gml.Nobs[gml.Nlevels,k]
@@ -108,7 +113,8 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 	}
 	
 	if (stat!="eta" & 
-                st_global("e(llfunction"+strofreal(gml.model)+")")!="") {
+                st_global("e(llfunction"+strofreal(gml.model)+")")!="" &
+		st_global("e(cmd2)")!="stexcess") {
 		merlin_error("eta only valid prediction with family(user, llfunction())")
 	}
 	
