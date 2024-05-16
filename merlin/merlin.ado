@@ -1,8 +1,10 @@
-*! version 2.4.2  15mar2024
+*! version 2.4.3  16may2024
 
 /*
 History
-2.4.2
+16may2024 v2.4.3: 
+- bug fix; predictions following stexcess re-synced
+15mar2024 v2.4.2: 
 - bug fix; survival or failure predictions after estimation of a 
   family(addhazard) model returned predictions assuming the model had been 
   fitted on the log hazard scale, rather than the hazard. Now fixed.
@@ -16,7 +18,7 @@ History
 - left-truncation with a multilevel survival models has been re-written
 - general tidying & improvements under the hood
 - density added to predict
-06feb2023 version 2.3.0 
+06feb2023 version 2.3.0
 - help file link fixes
 - chintpoints() now added and doc'd in stmerlin help file
 - error check added within rcs(..,df(#)) for repeated knots
