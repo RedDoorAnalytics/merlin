@@ -20,25 +20,25 @@ scores for multilevel model (without any ?EV[], ?XB[]
 
 void merlin_score_panels(`gml' gml, `RC' lnfi, `RM' G)
 {
-	analytic	= 1
-	G 			= J(gml.Nobs[1,1],gml.Nb,0)
-	bindex 		= 1
+	analytic = 1
+	G 	 = J(gml.Nobs[1,1],gml.Nb,0)
+	bindex 	 = 1
 	
 	if (analytic) {
 		
-		Li	= exp(lnfi)
-
+		Li = exp(lnfi)
 		for (mod=1;mod<=gml.Nmodels;mod++) {
 			
-			gml.model 	= gml.modtoind = mod
-			NHbs 		= asarray(gml.NHbs,mod)	
-			Nbs			= sum(NHbs)
+			gml.model = gml.modtoind = mod
+			NHbs 	  = asarray(gml.NHbs,mod)	
+			Nbs	  = sum(NHbs)
 			
 			//clp
 			hasconstr = asarray(gml.hasconstraint,mod)
 			for (el=1;el<=NHbs[1];el++) {
 				if (!hasconstr[el]) {
-					G[,bindex] = merlin_panels(1,gml,&merlin_weibull_score_loglambda(),bindex) 
+					G[,bindex] = merlin_panels(1,gml,	
+						&merlin_weibull_score_loglambda(),bindex) 
 				}
 				bindex++
 			}
@@ -83,8 +83,8 @@ void merlin_score_panels(`gml' gml, `RC' lnfi, `RM' G)
 	}
 	
 	//vcv - derivatives found numerically
-	eqnind 		= bindex
-	Nres 		= gml.Nres
+	eqnind 	= bindex
+	Nres 	= gml.Nres
 	covariances = gml.covariances
 	
 	for (i=1 ; i < gml.Nlevels ; i++) {
@@ -124,10 +124,10 @@ void merlin_score_panels(`gml' gml, `RC' lnfi, `RM' G)
 	
 }
 
-`RC' merlin_panels(	`RS' index,		///	-level-
-					`gml' gml,		/// -merlin object-
-					`PS' func,		///	-function to call-
-					| `RS' Xindex)	//	-design matrix element-
+`RC' merlin_panels(`RS' index,		/// -level-
+		   `gml' gml,		/// -merlin object-
+		   `PS' func,		/// -function to call-
+		   | `RS' Xindex)	// -design matrix element-
 {
 	`RS' index2
 	`RM' res, panelindex
@@ -155,16 +155,16 @@ void merlin_score_panels(`gml' gml, `RC' lnfi, `RM' G)
 			}
 		}
 	}
-
+ 
 	resq = resq :* asarray(gml.Li_ip,gml.qind) 
 
 	if (gml.usegh[index]) {			//GHQ
 		if (gml.hasweights[index]) 	return(asarray(gml.weights,(index,1)) :* resq * asarray(gml.baseGHweights,index))
-		else 						return(resq * asarray(gml.baseGHweights,index))
+		else 				return(resq * asarray(gml.baseGHweights,index))
 	}
-	else {							//MCI
+	else {					//MCI
 		if (gml.hasweights[index]) 	return(asarray(gml.weights,(index,1)) :* quadrowsum(resq):/gml.ndim[index])
-		else 						return(quadrowsum(resq):/gml.ndim[index])
+		else 				return(quadrowsum(resq):/gml.ndim[index])
 	}
 }
 void merlin_logl_panels_d(`RS' myb,`gml' gml, `RS' b, `RC' lnf)
@@ -177,8 +177,8 @@ void merlin_logl_panels_d(`RS' myb,`gml' gml, `RS' b, `RC' lnf)
 `RM' merlin_deriv(`gml' gml, `RS' eqnind)
 {
 	
-	myb 	= gml.myb
-	D 		= deriv_init()
+	myb = gml.myb
+	D   = deriv_init()
 	deriv_init_evaluator(D, &merlin_logl_panels_d())
 	deriv_init_evaluatortype(D, "v")
 // 	deriv_init_search(D,"off")
@@ -196,7 +196,9 @@ void merlin_logl_panels_d(`RS' myb,`gml' gml, `RS' b, `RC' lnf)
 {
 	b = gml.myb[eqnind]				
 	hstep = c("epsdouble")^(1/3)
-	if (abs(b)<=1 & abs(b)>0) 	hstep = abs(b)*hstep
+	if (abs(b)<=1 & abs(b)>0) {
+		hstep = abs(b)*hstep
+	}
 	copymyb = gml.myb
 	gml.myb[eqnind] = copymyb[eqnind] :+ hstep
 	merlin_xb(gml,gml.myb)
