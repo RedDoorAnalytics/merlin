@@ -324,31 +324,20 @@ void merlin_update_ip_newNip(`GML' gml, `RS' i)
 // Update adaptive quadrature locations and scales
 void merlin_gh_update_ip_alllevs(`GML' gml)
 {
-	
-	gml.Nrelevels
-	gml.adapt
-	gml.Nobs
-	for (i=1; i<=gml.Nrelevels; i++) {
+	for (i=1; i<=1; i++) {
 		
 		ndim = gml.ndim[i]
 		ind1 = 1; ind2 = ndim
-		11
 		stackednodes 	= J(ndim*gml.Nobs[i,1],gml.Nres[i],.)
 		detvcv 		= J(gml.Nobs[i,1],1,.)
 		basenodes 	= asarray(gml.baseGHnodes,i)
 		baseweights 	= asarray(gml.baseGHweights,i)
-		33
 		L_i 		= asarray(gml.Li_ip,gml.qind) * baseweights
 		numer 		= asarray(gml.Li_ip,gml.qind) :/ L_i
 		baseweights2 	= baseweights'
-		44
-		numer
 		for (j=1; j<=gml.Nobs[i,1]; j++) {
-			j
 			ipij 	 = asarray(gml.aghip,(i,j))
-			asarray(gml.aghip,(i,j))
 			newblups = numer[j,] * (ipij :* baseweights2)'
-			j,j
 			vcv_new  = (numer[j,] * 
 					(merlin_outerprod_by_col(ipij') :* 
 					baseweights)) :- 
@@ -361,14 +350,13 @@ void merlin_gh_update_ip_alllevs(`GML' gml)
 			ind1 = ind1 + ndim
 			ind2 = ind2 + ndim
 		}
-		99
+
 		//update logl extra contribution
 		asarray(gml.aghlogl,
 			i,
 			rowshape(merlin_lndmvnorm(stackednodes,I(gml.Nres[i])),
 				 gml.Nobs[i,1]) 
 			:+ log(detvcv):/2)
-		56
 		//update stacked nodes, and RE specific stacked nodes
 		asarray(gml.stackednodes,i,stackednodes')
 		res = cholesky(asarray(gml.vcvs,i)) * asarray(gml.stackednodes,i)
