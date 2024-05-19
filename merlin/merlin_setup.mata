@@ -1072,7 +1072,7 @@ void merlin_setup_simple_flag(`gml' gml)
 void merlin_setup_gf12(`gml' gml)
 {
 	
-	if (gml.todo & !gml.predict) {
+	if (gml.todo & !gml.predict | gml.firth) {
 	
 		gml.NHeqns 	= J(gml.Nmodels,1,0)
 		NHbs 		= asarray_create("real",1)
