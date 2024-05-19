@@ -5,7 +5,7 @@ input stime died x
 2 1 1
 3 1 0
 
-merlin (stime x, family(cox, firth failure(died))) 
+merlin (stime x, family(cox, firth failure(died)))
 
 assert `"`e(cmdline)'"'           == `"merlin (stime x, family(cox, firth failure(died)))"'
 assert `"`e(chintpoints)'"'       == `"30"'
@@ -84,7 +84,7 @@ stmerlin x, dist(cox) firth
 
 assert `"`e(cmdline2)'"'          == `"stmerlin x, dist(cox) firth"'
 assert `"`e(cmd2)'"'              == `"stmerlin"'
-_assert_streq `"`e(cmdline)'"' `"merlin (_t x    , family(cox, failure(_d)      firth)  ) if _st==1, bors  from(__000002)        "'
+_assert_streq `"`e(cmdline)'"' `"merlin (_t x    , family(cox, failure(_d)      firth)  ) if _st==1, bors  from(__000002)         "'
 assert `"`e(chintpoints)'"'       == `"30"'
 assert `"`e(nap1)'"'              == `"0"'
 assert `"`e(ndistap1)'"'          == `"0"'
