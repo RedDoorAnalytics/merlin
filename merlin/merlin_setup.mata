@@ -131,6 +131,7 @@ struct merlin_struct {
 	`RS' df
 	`TR' b, bdraws
 	`TR' Li_ip
+	`TR' c
 	`TR' aghip
 	`TR' aghip2
 	`TR' aghlogl

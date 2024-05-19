@@ -160,12 +160,16 @@ void merlin_init_integration(`gml' gml)
 	
 	gml.qind = 1,J(1,gml.Nrelevels,0)	
 	
-	if (sum(gml.adapt) | gml.todo) gml.Li_ip = asarray_create("real",cols(gml.qind))
+	if (sum(gml.adapt) | gml.todo | gml.predict) {
+		gml.Li_ip = asarray_create("real",cols(gml.qind))
+		gml.c 	  = asarray_create("real",cols(gml.qind))
+	}
 	
 	if (max(gml.usegh)==1) {
 		if (max(gml.adapt :* gml.usegh)==1) {
 			gml.atol = 1e-08
-			gml.Pupdateip = &merlin_gh_update_ip()
+			gml.Pupdateip = &merlin_gh_update_ip_alllevs()
+// 			gml.Pupdateip = &merlin_gh_update_ip()
 			gml.showadapt = st_local("showadapt")!=""
 			if (st_local("adaptiterations")=="") gml.adaptit = 1001
 			else gml.adaptit = strtoreal(st_local("adaptiterations"))
@@ -192,9 +196,9 @@ void merlin_init_ip(`gml' gml)
 
 	//initialise stuff needed if at least one level's integ is adaptive
 	if (sum(gml.adapt)) {
-		gml.aghip 				= asarray_create("real",2)
-		gml.aghip2 				= asarray_create("real",2)
-		gml.aghlogl				= asarray_create("real",1)	
+		gml.aghip 			= asarray_create("real",2)
+		gml.aghip2 			= asarray_create("real",2)
+		gml.aghlogl			= asarray_create("real",1)	
 		gml.stackednodes 		= asarray_create("real",1)
 		gml.adpanelindexes 		= asarray_create("real",2)
 		for (j=1;j<=gml.Nmodels;j++) {
@@ -216,7 +220,7 @@ void merlin_init_ip(`gml' gml)
 	}
 	
 	gml.ndim = J(gml.Nrelevels,1,0)
-
+	
 	for (i=1;i<gml.Nlevels;i++) {
 		
 		if (gml.usegh[i]) {
@@ -307,7 +311,6 @@ void merlin_init_ip(`gml' gml)
 		
 		}
 	}
-
 	//note; Npanels is indexed by level and model -> they are the same across all models (until ob level which isn't used here)
 }
 

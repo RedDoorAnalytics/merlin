@@ -1,12 +1,8 @@
-*! version 2.4.3  16may2024
+*! version 2.4.2  15mar2024
 
 /*
 History
-Dev
-- Cox model with Firth correction added; family(cox, firth ...)
-16may2024 v2.4.3: 
-- bug fix; predictions following stexcess re-synced
-15mar2024 v2.4.2: 
+2.4.2
 - bug fix; survival or failure predictions after estimation of a 
   family(addhazard) model returned predictions assuming the model had been 
   fitted on the log hazard scale, rather than the hazard. Now fixed.
@@ -20,7 +16,7 @@ Dev
 - left-truncation with a multilevel survival models has been re-written
 - general tidying & improvements under the hood
 - density added to predict
-06feb2023 version 2.3.0
+06feb2023 version 2.3.0 
 - help file link fixes
 - chintpoints() now added and doc'd in stmerlin help file
 - error check added within rcs(..,df(#)) for repeated knots
@@ -365,7 +361,6 @@ program Fit, eclass sortpreserve
         local mlfrom    `"`r(mlfrom)'"'
         local mlzeros	`"`r(mlzeros)'"'
         local modellabels `"`r(modellabels)'"'
-	local firth 	"`r(firth)'"
         if "`mlcns'" != "" {
                 local cnsopt constraint(`mlcns')
         }
@@ -424,13 +419,6 @@ program Fit, eclass sortpreserve
                 
         }
         
-	if "`firth'"!="" {
-		di ""
-		di as text "Refining variance-covariance matrix"
-		ereturn repost V = firthV
-		capture mat drop firthV
-	}
-	
         ereturn local predict   merlin_p
         ereturn local from = "`mlfrom'"!=""
         ereturn local hasopts = `hasopts'

@@ -26,6 +26,41 @@ real matrix merlin_stexcess_logh(`gml' gml, `RM' t)
                         haz_excess))
 }
 
+real matrix merlin_stexcess_h(`gml' gml, `RM' t)
+{
+	haz_expect = exp(merlin_util_xzb(gml,t))
+        haz_excess = exp(merlin_util_xzb_mod(gml,2,t))
+	return(haz_expect :+ 
+                        gml.indicator[merlin_get_index(gml)] :* 
+                        haz_excess)
+}
+
+`RM' merlin_stexcess_ch(`gml' gml, `RC' t, | `RC' t0)
+{
+	nobs 	= rows(t)
+	ch 	= J(nobs,1,0)
+	Ngq 	= gml.chip
+
+	gq 	= merlin_gq(Ngq,"legendre")
+	qp	= t :/ 2 :* J(nobs,1,gq[,1]') :+ t:/2
+	qw	= t :/ 2 :* J(nobs,1,gq[,2]')
+	if (args()==2) {
+		for (q=1;q<=Ngq;q++) {
+			ch = ch :+ (exp(merlin_util_xzb(gml,qp[,q])) :+
+				exp(merlin_util_xzb_mod(gml,2,qp[,q]))) :* 
+				qw[,q]
+		}
+	}
+	else {
+		for (q=1;q<=Ngq;q++) {
+			ch = ch :+ (exp(merlin_util_xzb(gml,qp[,q],t0)) :+
+				exp(merlin_util_xzb_mod(gml,2,qp[,q],t0))) :* 
+				qw[,q]
+		}
+	}
+	return(ch)
+}
+
 real matrix merlin_stexcess_logl(`gml' gml , | `RM' G, `RM' H)
 {
 	model 	= gml.model

@@ -3,7 +3,7 @@
 // --> run whole do file
 
 //!!
-// BUILD in 15.1
+// BUILD in 17
 //!!
 
 local drive /Users/Michael
@@ -14,7 +14,7 @@ local includemata       = 0
 //=======================================================================================================================//
 
 //build new release -> current version up is 2.3.0
-local newversion 2_4_1
+local newversion 2_4_2
 if `includemata' {
         local newversion `newversion'_mata
 }
@@ -42,12 +42,6 @@ copy ./build/merlin_details.txt `fdir', replace
 	copy ./merlin/merlin_user.sthlp `fdir', replace
 	copy ./merlin/merlin_reporting.sthlp `fdir', replace
 	copy ./merlin/merlin_postestimation.sthlp `fdir', replace
-
-//stmerlin
-//	
-// 	copy ./stmerlin/stmerlin.ado `fdir', replace
-// 	copy ./stmerlin/stmerlin.sthlp `fdir', replace
-// 	copy ./stmerlin/stmerlin_postestimation.sthlp `fdir', replace
 	
 //exptorcs
 
