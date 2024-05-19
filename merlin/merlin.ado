@@ -1,7 +1,9 @@
-*! version 2.4.3  16may2024
+*! version 2.4.4  20may2024
 
 /*
 History
+20may2024 v2.4.4:
+- [NOTDOC] Cox model with Firth correction added; family(cox, firth ...)
 16may2024 v2.4.3: 
 - bug fix; predictions following stexcess re-synced
 15mar2024 v2.4.2: 
@@ -363,6 +365,7 @@ program Fit, eclass sortpreserve
         local mlfrom    `"`r(mlfrom)'"'
         local mlzeros	`"`r(mlzeros)'"'
         local modellabels `"`r(modellabels)'"'
+	local firth 	"`r(firth)'"
         if "`mlcns'" != "" {
                 local cnsopt constraint(`mlcns')
         }
@@ -421,6 +424,13 @@ program Fit, eclass sortpreserve
                 
         }
         
+	if "`firth'"!="" {
+		di ""
+		di as text "Refining variance-covariance matrix"
+		ereturn repost V = firthV
+		capture mat drop firthV
+	}
+	
         ereturn local predict   merlin_p
         ereturn local from = "`mlfrom'"!=""
         ereturn local hasopts = `hasopts'

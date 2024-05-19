@@ -1,10 +1,14 @@
-//local drive Z:/
-local drive /Users/Michael/Documents
+//source paths
+local drive /Users/michael/My Drive/software
 cd "`drive'/merlin"
-adopath ++ "./merlin"
-clear all
+adopath ++ "`drive'/merlin"
+adopath ++ "`drive'/merlin/merlin"
+adopath ++ "`drive'/stmerlin/stmerlin"
 
-tr:do ./build/buildmlib.do
+
+//build mlib
+clear all
+do ./build/buildmlib.do
 mata mata clear
 
 set seed 7254

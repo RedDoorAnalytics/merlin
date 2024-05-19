@@ -21,15 +21,15 @@ mata:
 {
 	//core
 	gml.survind = 0
-	Gx 			= J(gml.N,gml.ndim[gml.Nrelevels],0)	
-	y 			= merlin_util_depvar(gml)
-	x  			= merlin_util_xz_col_simple(gml,Xindex)
-	gam			= merlin_util_dap(gml,1)
+	Gx   = J(gml.N,gml.ndim[gml.Nrelevels],0)	
+	y    = merlin_util_depvar(gml)
+	x    = merlin_util_xz_col_simple(gml,Xindex)
+	gam  = merlin_util_dap(gml,1)
 
 	//exactly observed events and/or right censoring -> survival function
 	//this first for dimensions
 	gml.survind = 2
-	Nobs2 		= merlin_get_nobs(gml)
+	Nobs2 	    = merlin_get_nobs(gml)
 	if (Nobs2) {
 		index2 	= merlin_get_surv_index(gml)
 		
@@ -51,7 +51,7 @@ mata:
 			Gx[index2,] = - x[index2] :* exp(merlin_util_xzb(gml)) :* y[index2,1] :^ gam
 // 			if (haslt) {
 // 				gml.survind 	= 4
-// 				index4 			= merlin_get_surv_index(gml)
+// 				index4 		= merlin_get_surv_index(gml)
 // 				logl[index4] 	= logl[index4] :+ exp(xb[index4,]) :* y[index4,3] :^ gam
 // 			}
 // 		}
@@ -59,7 +59,7 @@ mata:
 		
 	gml.survind = 1
 	if (merlin_get_nobs(gml)) {
-		index1 		= merlin_get_surv_index(gml)
+		index1 	    = merlin_get_surv_index(gml)
 		Gx[index1,] = Gx[index1,] :+ x[index1]
 	}	
 		
@@ -90,8 +90,8 @@ mata:
 		nobs 	= gml.Nobs[gml.Nlevels,gml.model]
 		dch 	= J(nobs,1,0)
 		Ngq 	= 30
-		gq 		= merlin_gq(Ngq,"legendre")
-		qp		= y[,1] :/ 2 :* J(nobs,1,gq[,1]') :+ y[,1]:/2
+		gq 	= merlin_gq(Ngq,"legendre")
+		qp	= y[,1] :/ 2 :* J(nobs,1,gq[,1]') :+ y[,1]:/2
 		hazq	= y[,1]:/2 :* J(nobs,1,gq[,2]') :* qp :^ (gam-1) :* gam :* (gam:*log(qp) :+ 1)
 		for (q=1;q<=Ngq;q++) {
 			dch = dch :+ exp(merlin_util_xzb(gml,qp[,q])) :* hazq[,q]
@@ -100,7 +100,5 @@ mata:
 	}
 	else return(y[,2] :+ gam :*log(y[,1]) :* (y[,2] :- exp(merlin_util_xzb(gml)) :* y[,1]:^gam))
 }
-
-
 
 end

@@ -130,11 +130,14 @@ void merlin_gh_update_ip(`GML' gml)
 		numer 		= asarray(gml.Li_ip,gml.qind) :/ L_i
 		baseweights2 	= baseweights'
 		for (j=1; j<=gml.Nobs[i,1]; j++) {
-			ipij 		= asarray(gml.aghip,(i,j))
-			newblups 	= numer[j,] * (ipij :* baseweights2)'
-			vcv_new 	= (numer[j,] * (merlin_outerprod_by_col(ipij') :* baseweights)) :- newblups # newblups
-			vcv_new 	= rowshape(vcv_new,gml.Nres[i])
-			nodes 		= newblups' :+ cholesky(vcv_new) * basenodes
+			ipij 	 = asarray(gml.aghip,(i,j))
+			newblups = numer[j,] * (ipij :* baseweights2)'
+			vcv_new  = (numer[j,] * 
+					(merlin_outerprod_by_col(ipij') :* 
+					baseweights)) :- 
+					newblups # newblups
+			vcv_new  = rowshape(vcv_new,gml.Nres[i])
+			nodes 	 = newblups' :+ cholesky(vcv_new) * basenodes
 			asarray(gml.aghip,(i,j),nodes)
 			detvcv[j] = det(vcv_new)
 			stackednodes[|ind1,.\ind2,.|] = nodes'
@@ -142,22 +145,32 @@ void merlin_gh_update_ip(`GML' gml)
 			ind2 = ind2 + ndim
 		}
 		//update logl extra contribution
-		asarray(gml.aghlogl,i,rowshape(merlin_lndmvnorm(stackednodes,I(gml.Nres[i])),gml.Nobs[i,1]) :+ log(detvcv):/2)
+		asarray(gml.aghlogl,
+			i,
+			rowshape(merlin_lndmvnorm(stackednodes,I(gml.Nres[i])),
+				 gml.Nobs[i,1]) 
+			:+ log(detvcv):/2)
 		//update stacked nodes, and RE specific stacked nodes
 		asarray(gml.stackednodes,i,stackednodes')
 		res = cholesky(asarray(gml.vcvs,i)) * asarray(gml.stackednodes,i)
 		for (r=1;r<=gml.Nres[i];r++) {
-			asarray(gml.aghip2,(i,r),rowshape(res[r,],gml.Nobs[i,1]))
+			asarray(gml.aghip2,
+				(i,r),
+				rowshape(res[r,],gml.Nobs[i,1]))
 		}	
 	}
-}	
+}
 
 void merlin_gh_post_ip(`GML' gml)
 {
 	for (i=1; i<=1; i++) {
 		asarray(gml.Pgml->stackednodes,i,asarray(gml.stackednodes,i))
-		for (j=1; j<=gml.Nobs[i,1]; j++) 	asarray(gml.Pgml->aghip,(i,j),asarray(gml.aghip,(i,j)))
-		for (r=1; r<=gml.Nres[i]; r++) 		asarray(gml.Pgml->aghip2,(i,r),asarray(gml.aghip2,(i,r)))
+		for (j=1; j<=gml.Nobs[i,1]; j++) {
+			asarray(gml.Pgml->aghip,(i,j),asarray(gml.aghip,(i,j)))
+		}
+		for (r=1; r<=gml.Nres[i]; r++) {
+			asarray(gml.Pgml->aghip2,(i,r),asarray(gml.aghip2,(i,r)))
+		}
 		asarray(gml.Pgml->aghlogl,i,asarray(gml.aghlogl,i))
 	}
 }	
@@ -306,6 +319,53 @@ void merlin_update_ip_newNip(`GML' gml, `RS' i)
 		}
 			
 	}	
+}
+
+// Update adaptive quadrature locations and scales
+void merlin_gh_update_ip_alllevs(`GML' gml)
+{
+	for (i=1; i<=1; i++) {
+		
+		ndim = gml.ndim[i]
+		ind1 = 1; ind2 = ndim
+		stackednodes 	= J(ndim*gml.Nobs[i,1],gml.Nres[i],.)
+		detvcv 		= J(gml.Nobs[i,1],1,.)
+		basenodes 	= asarray(gml.baseGHnodes,i)
+		baseweights 	= asarray(gml.baseGHweights,i)
+		L_i 		= asarray(gml.Li_ip,gml.qind) * baseweights
+		numer 		= asarray(gml.Li_ip,gml.qind) :/ L_i
+		baseweights2 	= baseweights'
+		for (j=1; j<=gml.Nobs[i,1]; j++) {
+			ipij 	 = asarray(gml.aghip,(i,j))
+			newblups = numer[j,] * (ipij :* baseweights2)'
+			vcv_new  = (numer[j,] * 
+					(merlin_outerprod_by_col(ipij') :* 
+					baseweights)) :- 
+					newblups # newblups
+			vcv_new  = rowshape(vcv_new,gml.Nres[i])
+			nodes 	 = newblups' :+ cholesky(vcv_new) * basenodes
+			asarray(gml.aghip,(i,j),nodes)
+			detvcv[j] = det(vcv_new)
+			stackednodes[|ind1,.\ind2,.|] = nodes'
+			ind1 = ind1 + ndim
+			ind2 = ind2 + ndim
+		}
+
+		//update logl extra contribution
+		asarray(gml.aghlogl,
+			i,
+			rowshape(merlin_lndmvnorm(stackednodes,I(gml.Nres[i])),
+				 gml.Nobs[i,1]) 
+			:+ log(detvcv):/2)
+		//update stacked nodes, and RE specific stacked nodes
+		asarray(gml.stackednodes,i,stackednodes')
+		res = cholesky(asarray(gml.vcvs,i)) * asarray(gml.stackednodes,i)
+		for (r=1;r<=gml.Nres[i];r++) {
+			asarray(gml.aghip2,
+				(i,r),
+				rowshape(res[r,],gml.Nobs[i,1]))
+		}	
+	}
 }
 
 end

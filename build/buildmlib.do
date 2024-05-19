@@ -51,6 +51,7 @@
 			do "./merlin/metamerlin_ad.mata"
 			do "./merlin/merlin_impute.mata"
                         do "./merlin/merlin_stexcess.mata"
+			do "./merlin/merlin_cox_firth.mata"
 			
 			do "./merlin/merlin_gf.mata"
 			do "./merlin/merlin_gf_survival.mata"

@@ -650,7 +650,7 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 `RM' merlin_predict_blups(`gml' gml, | `RS' getses)
 {
 	if (args()==2) 	merlin_predict_getblups(gml,getses)
-	else 			merlin_predict_getblups(gml)
+	else 		merlin_predict_getblups(gml)
 	gml.survind = 0
 	gml.model = gml.modtoind = strtoreal(st_local("outcome"))	//getblups changes it
 	return(asarray(gml.blups,1)[merlin_get_adpanelindex(gml,1),])
@@ -660,7 +660,7 @@ void merlin_predict_getblups(`gml' gml, | `RS' getses)
 {
 	getses 		= args()==2
 	gml.blups 	= asarray_create("real",1)
-	
+
 	//adaptive updates to calculate blups
 	gml.fixedonly = 0
 	oldlnl 	= quadsum(merlin_logl_panels(1,gml),1)

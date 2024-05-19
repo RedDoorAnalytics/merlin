@@ -22,6 +22,7 @@ do ./cert/strcs.do
 do ./cert/stpm2.do
 do ./cert/pwexp.do
 do ./cert/cert_cox.do
+do ./cert/cert_cox_firth.do
 do ./cert/relsurverror.do
 do ./cert/userhaz.do
 do ./cert/cert_bhazard_comptostpm2.do

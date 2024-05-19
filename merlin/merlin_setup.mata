@@ -131,6 +131,7 @@ struct merlin_struct {
 	`RS' df
 	`TR' b, bdraws
 	`TR' Li_ip
+	`TR' c
 	`TR' aghip
 	`TR' aghip2
 	`TR' aghlogl
@@ -214,6 +215,8 @@ struct merlin_struct {
 	`RS' haspenalty			//flag
 	`RS' islasso			//lasso or ridge
 	`RS' lambda			//pen. parameter
+	
+	`RS' firth
 	
 	//morgana
 	`RS' morgana	
@@ -1069,7 +1072,7 @@ void merlin_setup_simple_flag(`gml' gml)
 void merlin_setup_gf12(`gml' gml)
 {
 	
-	if (gml.todo & !gml.predict) {
+	if (gml.todo & !gml.predict | gml.firth) {
 	
 		gml.NHeqns 	= J(gml.Nmodels,1,0)
 		NHbs 		= asarray_create("real",1)
@@ -1141,7 +1144,7 @@ void merlin_setup_evaltype(`gml' gml)
 			check = J(gml.Nmodels,1,0)
 			for (i=1;i<=gml.Nmodels;i++) {
 				f = gml.familys[i]
-				if (f=="addhazard" | f=="cox" | f=="exponential" | f=="weibull" | f=="rp" | f=="loghazard" | f=="logchazard" | f=="gaussian" | f=="poisson" | f=="pwexponential") {
+				if (f=="addhazard" | (f=="cox" & st_local("firth")=="") | f=="exponential" | f=="weibull" | f=="rp" | f=="loghazard" | f=="logchazard" | f=="gaussian" | f=="poisson" | f=="pwexponential") {
 					check[i] = 2
 				}
 				if ((f=="pwexponential" | f=="exponential" | f=="gompertz" | f=="weibull" | f=="loghazard") & gml.hasanylint) {
