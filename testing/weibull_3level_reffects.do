@@ -13,8 +13,12 @@ clear
 webuse jobhistory
 stset tend, origin(tstart) fail(failure)
 
+sort birthyear id
+order birthyear id, first
+
 mestreg education  || birthyear: || id:, 	///
 	distribution(weib) adaptopts(log)
+predict refs*, reffects
 
 stmixed education || birthyear: || id: , dist(weib) adaptopts(log)
 
