@@ -17,10 +17,12 @@ version 14.1
 
 mata:
 
-`RM' merlin_logl_ologit(`gml' gml)
+`RM' merlin_logl_ologit(`gml' gml,| 	///
+                         `RM' G, 	///
+                         `RM' H)
 {
 	mod 	= gml.model
-	z 		= merlin_util_xzb(gml)
+	z 	= merlin_util_xzb(gml)
 	cuts 	= asarray(gml.distancb,(mod,1))
 
 	//handle 1 and ncuts separately	
@@ -33,13 +35,15 @@ mata:
 	z[oneindex,] 	= 1:/ (1 :+ exp(-cuts[oindex[oneindex,1]] :+ z[oneindex,]))
 	z[ncutsindex,] 	= 1 :- 1:/ (1 :+ exp(-cuts[oindex[ncutsindex,2]] :+ z[ncutsindex,]))
 	
-	return(log(z))
+	if (gml.todo==0) return(log(z))
 }
 
-`RM' merlin_logl_oprobit(`gml' gml)
+`RM' merlin_logl_oprobit(`gml' gml,| 	///
+                         `RM' G, 	///
+                         `RM' H)
 {
 	mod 	= gml.model
-	z 		= merlin_util_xzb(gml)
+	z 	= merlin_util_xzb(gml)
 	cuts 	= asarray(gml.distancb,(mod,1))
 	
 	//handle 1 and ncuts separately	
@@ -52,7 +56,7 @@ mata:
 	z[oneindex,] 	= normal(cuts[oindex[oneindex,1]] :- z[oneindex,])
 	z[ncutsindex,] 	= 1 :- normal(cuts[oindex[ncutsindex,2]] :- z[ncutsindex,])
 	
-	return(log(z))
+	if (gml.todo==0) return(log(z))
 }
 
 end
