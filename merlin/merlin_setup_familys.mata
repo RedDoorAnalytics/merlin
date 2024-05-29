@@ -147,8 +147,8 @@ void merlin_setup_ordinal(`gml' gml)
 				for (j=1;j<=gml.Nobs[gml.Nlevels,i];j++) {
 					oindex[j,1] = selectindex(ks:==y[j])
 				}
-				oindex[,2] 			= oindex[,1] :- 1
-				Ndf 				= rows(ks) - 1
+				oindex[,2] 		= oindex[,1] :- 1
+				Ndf 			= rows(ks) - 1
 				gml.Ndistancp[i] 	= Ndf
 				
 				asarray(gml.OrdIndexes,(i,4),oindex)

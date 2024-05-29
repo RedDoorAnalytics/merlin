@@ -16,6 +16,8 @@ mata mata clear
 
 //============================================================================//
 
+do ./cert/ologit-oprobit
+
 //survival
 do ./cert/streg.do
 do ./cert/strcs.do

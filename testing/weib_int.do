@@ -1,11 +1,12 @@
-//local drive Z:/
-local drive /Users/Michael
+//source paths
+local drive /Users/michael/My Drive/software
 cd "`drive'/merlin"
 adopath ++ "`drive'/merlin"
 adopath ++ "`drive'/merlin/merlin"
-clear all
+adopath ++ "`drive'/stmerlin/stmerlin"
 
-do ./build/buildmlib.do
+clear all
+tr:do ./build/buildmlib.do
 mata mata clear
 
 set seed 98798
@@ -23,28 +24,29 @@ stset stime, f(died)
 
 timer clear
 timer on 1
-mestreg trt age || id:, dist(weib) //evaltype(gf0))
-predict s1, surv marginal
-predict s5, surv cond(ebmeans)
-predict d1, density marginal
+mestreg trt age || id:, dist(weib) evaltype(gf2)
+// predict s1, surv marginal
+// predict s5, surv cond(ebmeans)
+// predict d1, density marginal
+// predict r1, reffects
+// merlin (stime trt age M1[id]@1, family(weib, failure(died)))	///
+// 	, 
 timer off 1
-// timer list
-// predict s1, surv cond(ebmeans)
-// // predictnl s2 = predict(surv cond(ebmeans)), ci(s2_lci s2_uci)
-// predict r1, reffects reses(ser1)
 
 timer on 2
 merlin (stime trt age M1[id]@1, family(weib, failure(died)))	///
-		, 
+	, evaltype(gf0) //gradient intmethod(gh)
 timer off 2
 
-predict d2, density marginal
-predict s2, survival marginal
-predict s3, survival fixedonly
-predict s6, surv fitted
+// predict d2, density marginal
+// predict s2, survival marginal
+// predict s3, survival fixedonly
+// predict s6, surv fitted
 // predict r2, reffects
+
+//
 // timer on 3
 // merlin (stime trt age M1[id]@1, family(weib, failure(died)))	///
-// 		, evaltype(gf1debug) //grad 
+// 		, evaltype(gf1debug) grad 
 // timer off 3
-// timer list
+timer list
