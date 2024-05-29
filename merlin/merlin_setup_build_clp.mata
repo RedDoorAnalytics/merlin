@@ -37,13 +37,13 @@ void merlin_build_xz(`gml' gml)
 	el1#el2#...@#
 
 	-> Each elj can be
-	varname						- variable name											
-	M?[] 						- random effect											
-	fp()						- fractional polynomial									
-	rcs()						- rcs function of time	
-	?EV[]/?XB[]					- other outcome function
-	mf()						- mata function of time									
-	gp()						- gaussian process
+	varname				- variable name										
+	M?[] 				- random effect				
+	fp()				- fractional polynomial
+	rcs()				- rcs function of time	
+	?EV[]/?XB[]			- other outcome function
+	mf()				- mata function of time
+	gp()				- gaussian process
 	
 	-> design matrix gets built and stored for all elements except random effects and ?EV[]/?XB[]
 	*/
@@ -166,7 +166,7 @@ void merlin_build_xz(`gml' gml)
 		gml.eqnindex[mod,2] = beqn-1
 
 		//handle distributional ancillary parameters
-		if (gml.familys[mod]=="ordinal") {
+		if (gml.familys[mod]=="ordinal" & !gml.predict) {
 			if (gml.links[mod]=="logit") 	omod = "qui ologit"
 			else 				omod = "qui oprobit"
 			stata(omod+" "+st_local("response"+strofreal(mod)))	//extra starting values for ordinal repsonses
