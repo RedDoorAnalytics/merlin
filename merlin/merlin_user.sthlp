@@ -21,7 +21,7 @@
 
 {pstd}
 {it:The easiest way to learn the full capabilities is to work through some of the more complex examples, described at}
-{bf:{browse "https://reddooranalytics.se/products/merlin":reddooranalytics.se/products/merlin}}.
+{bf:{browse "https://reddooranalytics.se/software/merlin":reddooranalytics.se/software/merlin}}.
 
 
 {phang}
@@ -122,7 +122,7 @@ as you so wish. You can then combine your new model with any of the inbuilt mode
 with another user-defined model...the possibilities are endless.
 
 {pstd}
-For full worked examples, please visit {bf:{browse "https://www.mjcrowther.co.uk/software/merlin":mjcrowther.co.uk/software/merlin}}.
+For full worked examples, please visit {bf:{browse "https://reddooranalytics.se/software/merlin":reddooranalytics.se/software/merlin}}.
 
 
 {title:Writing a merlin log-likelihood function}

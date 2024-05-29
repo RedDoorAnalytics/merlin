@@ -200,7 +200,7 @@ The command syntax of {cmd:merlin} is fully specified by the {it:models} and the
 
 {pstd}
 For full details and many tutorials, take a look at the accompanying website: 
-{browse "https://reddooranalytics.se/products/merlin":reddooranalytics.se/products/merlin}
+{browse "https://reddooranalytics.se/software/merlin":reddooranalytics.se/software/merlin}
 
 
 {marker options}{...}

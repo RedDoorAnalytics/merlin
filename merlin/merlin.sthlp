@@ -115,7 +115,7 @@ There are many more on the way.
 
 {pstd}
 For full details and many tutorials, take a look at 
-{bf:{browse "https://reddooranalytics.se/products/merlin":merlin's homepage}}.
+{bf:{browse "https://reddooranalytics.se/software/merlin":merlin's homepage}}.
 
 
 {marker options}{...}
@@ -146,7 +146,7 @@ control how the results of estimation are displayed.  See
 
 {phang}
 These examples are intended for quick reference.  For detailed examples, see the 
-{bf:{browse "https://reddooranalytics.se/products/merlin":merlin homepage}}.
+{bf:{browse "https://reddooranalytics.se/software/merlin":merlin homepage}}.
 
 {phang}
 {ul:{bf:Example 1: Linear regression}}

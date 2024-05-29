@@ -179,7 +179,7 @@ cumulative hazard functions. Default is {cmd:chintpoints(30)}
 {title:Examples}
 
 {phang}
-For detailed examples, see {bf:{browse "https://reddooranalytics.se/products/merlin":reddooranalytics.se/products/merlin}}.
+For detailed examples, see {bf:{browse "https://reddooranalytics.se/software/merlin":reddooranalytics.se/software/merlin}}.
 
 {pstd}Setup{p_end}
 {phang2}{cmd:. use http://fmwww.bc.edu/repec/bocode/s/stjm_pbc_example_data, clear}{p_end}
