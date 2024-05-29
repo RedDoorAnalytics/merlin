@@ -31,7 +31,7 @@ mata:
 	ncutsindex 	= asarray(gml.OrdIndexes,(mod,3))
 	rest 		= asarray(gml.OrdIndexes,(mod,2))
 
-	z[rest,] 		= 1:/ (1 :+ exp(-cuts[oindex[rest,1]] :+ z[rest,])) :- 1:/ (1 :+ exp(-cuts[oindex[rest,2]] :+ z[rest,]))
+	z[rest,] 	= 1:/ (1 :+ exp(-cuts[oindex[rest,1]] :+ z[rest,])) :- 1:/ (1 :+ exp(-cuts[oindex[rest,2]] :+ z[rest,]))
 	z[oneindex,] 	= 1:/ (1 :+ exp(-cuts[oindex[oneindex,1]] :+ z[oneindex,]))
 	z[ncutsindex,] 	= 1 :- 1:/ (1 :+ exp(-cuts[oindex[ncutsindex,2]] :+ z[ncutsindex,]))
 	
@@ -52,7 +52,7 @@ mata:
 	ncutsindex 	= asarray(gml.OrdIndexes,(mod,3))
 	rest 		= asarray(gml.OrdIndexes,(mod,2))
 
-	z[rest,] 		= normal(cuts[oindex[rest,1]] :- z[rest,]) :- normal(cuts[oindex[rest,2]] :- z[rest,])
+	z[rest,] 	= normal(cuts[oindex[rest,1]] :- z[rest,]) :- normal(cuts[oindex[rest,2]] :- z[rest,])
 	z[oneindex,] 	= normal(cuts[oindex[oneindex,1]] :- z[oneindex,])
 	z[ncutsindex,] 	= 1 :- normal(cuts[oindex[ncutsindex,2]] :- z[ncutsindex,])
 	
