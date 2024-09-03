@@ -24,7 +24,7 @@ stset stime, f(died)
 
 timer clear
 timer on 1
-mestreg trt age || id:, dist(weib) evaltype(gf2)
+// mestreg trt age || id:, dist(weib) evaltype(gf2)
 // predict s1, surv marginal
 // predict s5, surv cond(ebmeans)
 // predict d1, density marginal
@@ -38,10 +38,12 @@ merlin (stime trt age M1[id]@1, family(weib, failure(died)))	///
 	, evaltype(gf0) //gradient intmethod(gh)
 timer off 2
 
+cap drop tvar
+range tvar 0 10 100
 // predict d2, density marginal
 // predict s2, survival marginal
 // predict s3, survival fixedonly
-// predict s6, surv fitted
+predict s6, surv marginal standardise timevar(tvar)
 // predict r2, reffects
 
 //

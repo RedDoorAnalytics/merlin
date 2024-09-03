@@ -208,8 +208,8 @@ program Predict
                         di as error "standardise not supported with `STAT'"
                         exit 198
                 }
-                if "`e(levelvars)'"!="" {
-                        di as error "standardise not supported with multilevel models"
+                if "`fitted'"!="" {
+                        di as error "standardise not supported with fitted predictions"
                         exit 198
                 }
         }

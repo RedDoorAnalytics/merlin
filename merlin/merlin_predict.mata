@@ -334,7 +334,6 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 	}
 	else {
 		if (gml.issurv[gml.model] & stand) {
-		
 			t 		= asarray(gml.timevars,gml.model)
 			Nt 		= rows(t)
 			Nobs	= gml.Nobs[gml.Nlevels,gml.model]
@@ -347,7 +346,10 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 				pred 	= J(Nt,1,.)
 				for (i=1;i<=Nt;i++) {
 					asarray(gml.timevars,gml.model,J(Nobs,1,t[i]))
-					pred[i] = mean((*pf)(gml))
+					if (predtype=="marginal") {
+						pred[i] = mean(merlin_predict_marginal(1,gml,pf))
+					} 
+					else pred[i] = mean((*pf)(gml))
 				}
 			}
 			
