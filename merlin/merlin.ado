@@ -1,8 +1,8 @@
-*! version 2.4.5  29may2024
+*! version 2.4.6  29may2024
 
 /*
 History
-19sep2024 v2.4.5:
+19sep2024 v2.4.6:
 - standif() added to predict
 29may2024 v2.4.5:
 - family(ologit) and family(oprobit) failed to run; now fixed
