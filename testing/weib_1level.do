@@ -1,5 +1,5 @@
 //local drive Z:/
-local drive /Users/Michael/Documents/merlin
+local drive /Users/Michael/My Drive/software/merlin
 cd "`drive'"
 adopath ++ "`drive'"
 adopath ++ "`drive'/merlin"
@@ -22,8 +22,8 @@ gen bmi = rnormal(30,3)
 gen t0 = 0 
 replace t0 = 3*runiform() //in 1/100
 
-survsim stime died , 	dist(weib) lambda(0.1) gamma(1.2) 				///
-						cov(trt -0.5 age 0.01 bmi -0.05) maxt(10) ltruncated(t0)	
+survsim stime died , 	dist(weib) lambda(0.1) gamma(1.2) 	///
+	cov(trt -0.5 age 0.01 bmi -0.05) maxt(10) ltruncated(t0)	
 
 stset stime, f(died) enter(t0)
 
@@ -44,20 +44,12 @@ timer off 2
 timer list
 
 
-predict h1, basehazard
+predict h1, hazard
 predict s1, surv standardise at(trt 1)
 
+su s1
+predict s2, surv standardise at(trt 1) standif(trt==1) debug
+su s2
 
-// mata:
-// real colvector predf(gml)
-// {	
-// 	t = merlin_util_timevar(gml)
-// 	gam = merlin_util_dap(gml,1)
-// 	return(exp(merlin_util_xzb(gml,t)):*gam:*t:^(gam:-1))
-// }
-// end
-
-// predict h1, userfunction(predf) at(trt 1) zeros ci
-
-// predict h2, hazard at(trt 1) zeros ci
-
+range tvar 0 5 100
+predict s2, surv standardise at(trt 1) standif(trt==1) timevar(tvar)

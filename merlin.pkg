@@ -1,7 +1,7 @@
 v 3
 d merlin: mixed effects regression for linear, non-linear and user-defined models
 d Author: Michael J. Crowther
-d Distribution-Date: 20240529
+d Distribution-Date: 20240919
 f merlin/merlin.ado
 f merlin/merlin_parse.ado
 f merlin/merlin.sthlp

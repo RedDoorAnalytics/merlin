@@ -13,8 +13,8 @@ local includemata       = 0
 
 //=======================================================================================================================//
 
-//build new release -> current version up is 2.4.5
-local newversion 2_4_5
+//build new release -> current version up is 2.3.0
+local newversion 2_4_6
 if `includemata' {
         local newversion `newversion'_mata
 }

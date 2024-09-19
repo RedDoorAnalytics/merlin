@@ -94,12 +94,18 @@ void merlin_build_touses(`gml' gml)
 
 		//timevar
 		//-> if not predicting as it can overide predicts timevar
-		if (!gml.predict) 			modelvars = modelvars,st_local("timevar"+strofreal(i))
+		if (!gml.predict) {
+			modelvars = modelvars,st_local("timevar"+strofreal(i))
+		}
 		//markout on predicts timevar, if there
 		//unless obtaining a standardised prediction
-		if (st_local("ptvar")!="" & st_local("standardise")=="") {
+		stand = st_local("standardise")!=""
+		if (st_local("ptvar")!="" & !stand) {
 			modelvars = modelvars,st_local("ptvar")
 		}
+		if (stand & st_local("standif")!="") {
+			modelvars = modelvars,st_local("standif")
+		} 
 
 		//response vars
 		//-> if survival model, can override predicts timevar
@@ -123,8 +129,12 @@ void merlin_build_touses(`gml' gml)
 		stata("tempname "+modeltousei)
 		
 		//avoid model specific ifs/ins if being called from predict
-		if (gml.predict) 	stata("mark "+st_local(modeltousei))
-		else 				stata("mark "+st_local(modeltousei)+" "+st_local("if"+strofreal(i))+" "+st_local("in"+strofreal(i)))
+		if (gml.predict) stata("mark "+st_local(modeltousei))
+		else {
+			stata("mark "+st_local(modeltousei) + " " + 
+				st_local("if"+strofreal(i)) + " " + 
+				st_local("in"+strofreal(i)))	
+		}
 		
 		//markout vars, and update based on main touse (markout only marks out missing obs of vars)
 		stata("markout "+st_local(modeltousei)+" "+invtokens(modelvars))
