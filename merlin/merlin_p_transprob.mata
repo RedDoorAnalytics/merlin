@@ -27,15 +27,15 @@ mata:
 	tp = strtoreal(st_local("transprob"))
 
 	if (tmattype==1) {		//standard illness-death
-		if 		(tp==1) 	pred = merlin_p_tp_p11(gml,t)
+		if 	(tp==1) 	pred = merlin_p_tp_p11(gml,t)
 		else if (tp==2) 	pred = merlin_p_tp_p12(gml,t)
-		else 				pred = merlin_p_tp_p13(gml,t)
+		else 			pred = merlin_p_tp_p13(gml,t)
 	}
 	else {					//extended illness-death
-		if 		(tp==1) 	pred = merlin_p_tp_p11(gml,t)
+		if 	(tp==1) 	pred = merlin_p_tp_p11(gml,t)
 		else if (tp==2) 	pred = merlin_p_tp_p12(gml,t)
 		else if (tp==3)		pred = merlin_p_tp_p113(gml,t)
-		else 				pred = merlin_p_tp_p123(gml,t)
+		else 			pred = merlin_p_tp_p123(gml,t)
 	}
 	
 	return(pred)	
@@ -51,15 +51,15 @@ mata:
 	los = strtoreal(st_local("los"))
 
 	if (tmattype==1) {		//standard illness-death
-		if 		(los==1) 	pred = &merlin_p_tp_p11()
+		if 	(los==1) 	pred = &merlin_p_tp_p11()
 		else if (los==2) 	pred = &merlin_p_tp_p12()
-		else 				pred = &merlin_p_tp_p13()
+		else 			pred = &merlin_p_tp_p13()
 	}
 	else {					//extended illness-death
-		if 		(los==1) 	pred = &merlin_p_tp_p11()
+		if 	(los==1) 	pred = &merlin_p_tp_p11()
 		else if (los==2) 	pred = &merlin_p_tp_p12()
 		else if (los==3)	pred = &merlin_p_tp_p113()
-		else 				pred = &merlin_p_tp_p123()
+		else 			pred = &merlin_p_tp_p123()
 	}
 	
 	return(merlin_p_get_los(gml,t,pred))	
@@ -73,7 +73,7 @@ mata:
 	}
 	
 	if (gml.tmat==(.,1,2\.,.,3\.,.,.)) 	return(1)
-	else 								return(2)
+	else 					return(2)
 }
 
 `RC' merlin_p_tp_p11(`gml' gml, `RC' t)
@@ -88,8 +88,8 @@ mata:
 `RC' merlin_p_tp_p12(`gml' gml, `RC' t)
 {
 	Ngq 	= 30
-	gq 		= merlin_gq(Ngq,"legendre")
-	qp		= t :/ 2 :* J(gml.N,1,gq[,1]') :+ t:/2
+	gq 	= merlin_gq(Ngq,"legendre")
+	qp	= t :/ 2 :* J(gml.N,1,gq[,1]') :+ t:/2
 	pred 	= J(gml.N,1,0)
 	for (q=1; q<=Ngq; q++) {						
 		gml.model = gml.modtoind = 1
