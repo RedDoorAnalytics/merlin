@@ -80,6 +80,7 @@ where {it:newvarsspec} is {it:stub}{cmd:*} or {it:{help newvarlist}}.
 {synopt :{opt fixedonly}}compute {it:statistic} based only on the fixed portion of the model; the default{p_end}
 {synopt :{opt marginal}}compute {it:statistic} marginally with respect to the latent variables{p_end}
 {synopt :{opt stand:ardise}}compute {it:statistic} marginally with respect to the independent variables{p_end}
+{synopt :{opt standif(expr)}}specify an if statement to restrict the observations that will be standardised over{p_end}
 {synopt :{cmd:outcome(}{it:#}{cmd:)}}specify observed response variable (default 1){p_end}
 {synopt :{opth causes(numlist)}}specify which {cmd:merlin} submodels contribute to the {it:statistic}{p_end}
 {synopt :{opt at(at_spec)}}specify covariate values for prediction{p_end}
@@ -281,6 +282,10 @@ variables over their entire support.
 marginally with respect to the independent variables. This is implemented by calculating the {it:statistic} 
 at all observed covariate patterns, and taking the average. Can be used in combination with {cmd:at()}, or {cmd:at1()} and 
 {cmd:at2()} to obtain causal estimands/contrasts.
+
+{phang}
+{cmd:standif({it:expr})} specifies an if expression to restrict the sample to standardise over, 
+such as {cmd: standif(trt==1)}.
 
 {phang}
 {cmd:outcome(}{it:#}{cmd:)} specifies that predictions for

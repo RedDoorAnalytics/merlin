@@ -2,6 +2,8 @@
 
 /*
 History
+19sep2024 v2.4.5:
+- standif() added to predict
 29may2024 v2.4.5:
 - family(ologit) and family(oprobit) failed to run; now fixed
 - predict after family(ologit) or family(oprobit) replaced e() with a null 

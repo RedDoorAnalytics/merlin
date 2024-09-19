@@ -335,10 +335,9 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 	else {
 		if (gml.issurv[gml.model] & stand) {
 		
-			t 		= asarray(gml.timevars,gml.model)
-			Nt 		= rows(t)
+			t 	= asarray(gml.timevars,gml.model)
+			Nt 	= rows(t)
 			Nobs	= gml.Nobs[gml.Nlevels,gml.model]
-			
 			
 			if (gml.familys[1,1]=="cox") {
 				pred = merlin_p_cox_s_stand(gml)
