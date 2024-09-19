@@ -1,5 +1,5 @@
 //local drive Z:/
-local drive /Users/Michael/Documents/merlin
+local drive /Users/Michael/My Drive/software/merlin
 cd "`drive'"
 adopath ++ "`drive'"
 adopath ++ "`drive'/merlin"
@@ -44,7 +44,7 @@ timer off 2
 timer list
 
 
-predict h1, basehazard
+predict h1, hazard
 predict s1, surv standardise at(trt 1)
 
 
