@@ -148,11 +148,11 @@ void merlin_build_touses(`gml' gml)
 	
 	//if being called from predict(ms), update on N
 	
-		if (gml.predict & st_local("npredict")!="") {
+		if (gml.predict) {
 			for (i=1;i<=gml.Nmodels;i++) {		
-				stata("qui replace " + 
-					gml.modeltouses[i]+" = _n <= " + 
-					st_local("npredict"))
+				if (st_local("npredict")!="") {
+					stata("qui replace "+gml.modeltouses[i]+" = _n <= "+st_local("npredict"))
+				}
 			}
 		}
 
@@ -168,7 +168,7 @@ void merlin_build_touses(`gml' gml)
 	
 	stata("qui count if "+gml.touse+"==1")
 	gml.N = st_numscalar("r(N)")
-
+	
 	//============================================================================================================//
 	// note; 
 	// everything above is based on complete case markouts
