@@ -23,6 +23,7 @@ void merlin_predict(`SS' object, `SS' newvar, `SS' touse, `SS' stat, `SS' predty
 {
 	`gml' gml
 	swap(gml,*findexternal(object))
+	touse = gml.touse
 	
 	merlin_predict_setup(gml,stat,touse)
 	stand	= st_local("standardise")!=""
@@ -34,6 +35,7 @@ void merlin_predict(`SS' object, `SS' newvar, `SS' touse, `SS' stat, `SS' predty
 		pred 	= merlin_predict_core(gml,pf,predtype,stand)
 	}
 	id = st_addvar("double",tokens(newvar))
+	
 	if (stand & !gml.issurv[gml.model])	{
 		st_store(1,id,pred)
 	}
