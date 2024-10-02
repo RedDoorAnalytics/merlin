@@ -1,9 +1,7 @@
-*! version 2.4.7  25sep2024
+*! version 2.4.6  29may2024
 
 /*
 History
-25sep2024 v2.4.7:
-- touse fix in predict
 19sep2024 v2.4.6:
 - standif() added to predict
 29may2024 v2.4.5:

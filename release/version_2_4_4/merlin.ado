@@ -1,16 +1,7 @@
-*! version 2.4.7  25sep2024
+*! version 2.4.4  20may2024
 
 /*
 History
-25sep2024 v2.4.7:
-- touse fix in predict
-19sep2024 v2.4.6:
-- standif() added to predict
-29may2024 v2.4.5:
-- family(ologit) and family(oprobit) failed to run; now fixed
-- predict after family(ologit) or family(oprobit) replaced e() with a null 
-  ologit or oprobit model which was used for starting values in estimation; 
-  now fixed
 20may2024 v2.4.4:
 - [NOTDOC] Cox model with Firth correction added; family(cox, firth ...)
 16may2024 v2.4.3: 

@@ -39,7 +39,6 @@ program Predict
                                 MARGinal                                ///
 				FITted			                ///
 				STANDardise		                ///
-				STANDIF(string)				///
 				PANel(numlist max=1)	                ///
                                                                         ///
 				CI			                ///
@@ -209,16 +208,11 @@ program Predict
                         di as error "standardise not supported with `STAT'"
                         exit 198
                 }
-                if "`fitted'"!="" {
-                        di as error "standardise not supported with fitted predictions"
+                if "`e(levelvars)'"!="" {
+                        di as error "standardise not supported with multilevel models"
                         exit 198
                 }
         }
-	
-	if "`standif'"!="" & "`standardise'"=="" {
-		di as error "option {bf:standif()} requires option {bf:standardise}"
-		exit 198
-	}
 		
         if "`e(family1)'"=="cox" {
                 if ("`STAT'"=="rmst" | "`STAT'"=="rmft" | ///
@@ -300,7 +294,7 @@ program Predict
                 if "`standardise'"=="" {
                         markout `touse' `timevar'
                 }
-                local ptvar ptvar(`timevar')	//merlin_build_touses() updated on this
+                local ptvar ptvar(`timevar')					//merlin_build_touses() updated on this
         }
         else {
                 if "`e(failure`outcome')'"!="" & "`e(family`outcome')'"!="cox" {
@@ -311,14 +305,6 @@ program Predict
                         }
                 }
         }
-	
-	//standardisation sample
-	if "`standif'"!="" {
-		tempvar tousestand
-		mark `tousestand' if `standif'
-		qui replace `tousestand'=. if `tousestand'!=1
-		local standif standif(`tousestand')
-	}
 		
         //integration method
         
@@ -382,8 +368,7 @@ program Predict
                                 `zeros'						///
                                 timevar(`timevar') ltruncated(`ltruncated')	///
                                 `devcodes' 					///
-                                `standardise' `standif' 			///
-				overoutcome(`overoutcome')			///
+                                `standardise' overoutcome(`overoutcome')	///
                                 userf(`userfunction')				///
                                 `passtmat' 					///
                                 `debug'                                         //
@@ -395,7 +380,7 @@ program Predict
         local globalopts `globalopts' outcome(`outcome')
         local globalopts `globalopts' `zeros'
         local globalopts `globalopts' `devcodes'
-        local globalopts `globalopts' `standardise' `standif'
+        local globalopts `globalopts' `standardise' 
         local globalopts `globalopts' overoutcome(`overoutcome')
         local globalopts `globalopts' userfunction(`userfunction') 
         local globalopts `globalopts' panel(`panel')
@@ -654,7 +639,6 @@ program Predict
                                         `pchintpoints'			///	
                                         `ptvar'				///
                                         `standardise'			///
-					`standif'			///
                                         `passtmat'			///
                                         `reffects'			///
                                         `reses'				///

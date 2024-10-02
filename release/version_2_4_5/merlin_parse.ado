@@ -92,7 +92,6 @@ program merlin_parse, rclass
                         NPREDICT(string)		/// NODOC
                         PTVAR(varname)			/// NODOC
                         STANDARDISE			/// NODOC
-			STANDIF(string)			/// NODOC
                         REFFECTS			/// NODOC
                         RESES				/// NODOC
 							///
@@ -269,7 +268,7 @@ program merlin_parse, rclass
                 MORGANA(string)						 ///
                 RESTARTValues(string) APSTARTValues(string) ZEROS	 ///
                 PREDICT PTVAR(string) NPREDICT(string) 			 /// -predictions-
-                NOGEN STANDARDISE STANDIF(string) REFFECTS RESES	 /// 
+                NOGEN STANDARDISE REFFECTS RESES			 /// 
                 * ]
 		
         local eqnnamexb `options'

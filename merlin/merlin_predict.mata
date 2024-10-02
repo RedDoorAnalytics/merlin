@@ -23,7 +23,8 @@ void merlin_predict(`SS' object, `SS' newvar, `SS' touse, `SS' stat, `SS' predty
 {
 	`gml' gml
 	swap(gml,*findexternal(object))
-	
+	touse = gml.touse
+
 	merlin_predict_setup(gml,stat,touse)
 	stand	= st_local("standardise")!=""
 
@@ -34,6 +35,7 @@ void merlin_predict(`SS' object, `SS' newvar, `SS' touse, `SS' stat, `SS' predty
 		pred 	= merlin_predict_core(gml,pf,predtype,stand)
 	}
 	id = st_addvar("double",tokens(newvar))
+
 	if (stand & !gml.issurv[gml.model])	{
 		st_store(1,id,pred)
 	}
@@ -49,19 +51,19 @@ void merlin_predict_setup(`gml' gml, `SS' stat, `SS' touse)
 
 	gml.myb = st_matrix(st_local("best"))	//get parameter estimates
 	merlin_xb(gml,gml.myb)			//and fill up (also updates NI points)
-	
+
 	k = strtoreal(st_local("outcome"))
 	gml.model = gml.modtoind = k		//keep here merlin_xb() changes it
 
 	if (stat!="tprob" & stat!="tlos") {
 		merlin_predict_error_check(gml,stat)
 	}
-	
+
 	if (st_global("e(cmd2)")=="stexcess") {
 		gml.Puserst[1,3] = &merlin_p_stexcess_ch()
 		gml.Puserst[1,1] = &merlin_p_stexcess_h()
 	}
-	
+
 	//update N
 	if (st_local("npredict")=="") {
 		gml.N = gml.Nobs[gml.Nlevels,k]
@@ -80,44 +82,44 @@ void merlin_predict_setup(`gml' gml, `SS' stat, `SS' touse)
 // 			else asarray(gml.timevars,gml.model,J(gml.N,1,0))	//fudge
 // 		}
 	}
-	
+
 }
 
 void merlin_predict_error_check(`gml' gml, `SS' stat)
 {
 	f = gml.familys[gml.model]
-	
-	issurv = f=="addhazard" | f=="pwexponential" | f=="loglogistic" | 
-                f=="lognormal" | f=="cox" | f=="rp" | f=="aft" | 
-                f=="exponential" | f=="weibull" | f=="gompertz" | 
-                f=="ggamma" | f=="loghazard" | f=="logchazard" | 
-                f=="plogchazard" | 
+
+	issurv = f=="addhazard" | f=="pwexponential" | f=="loglogistic" |
+                f=="lognormal" | f=="cox" | f=="rp" | f=="aft" |
+                f=="exponential" | f=="weibull" | f=="gompertz" |
+                f=="ggamma" | f=="loghazard" | f=="logchazard" |
+                f=="plogchazard" |
                 (f=="user" & st_global("e(failure"+strofreal(gml.model)+")")!="")
-	
+
 	if (!issurv) {
-		if (stat=="hazard" | stat=="survival" | stat=="chazard" | 
-                        stat=="logchazard" | stat=="cif" | stat=="rmst" | 
+		if (stat=="hazard" | stat=="survival" | stat=="chazard" |
+                        stat=="logchazard" | stat=="cif" | stat=="rmst" |
                         stat=="timelost") {
 			merlin_error(stat+" not allowed with family("+f+")")
 		}
 	}
-	
+
 	if (stat=="mu") {
-		if (f=="addhazard" | f=="loglogistic" | f=="lognormal" | 
-                        f=="cox" | f=="rp" | f=="exponential" | f=="weibull" | 
-                        f=="gompertz" | f=="ggamma" | f=="lquantile" | 
-                        f=="loghazard" | f=="logchazard" | f=="user" | 
+		if (f=="addhazard" | f=="loglogistic" | f=="lognormal" |
+                        f=="cox" | f=="rp" | f=="exponential" | f=="weibull" |
+                        f=="gompertz" | f=="ggamma" | f=="lquantile" |
+                        f=="loghazard" | f=="logchazard" | f=="user" |
                         f=="ordinal") {
 			merlin_error("mu not supported with family("+f+")")
 		}
 	}
-	
-	if (stat!="eta" & 
+
+	if (stat!="eta" &
                 st_global("e(llfunction"+strofreal(gml.model)+")")!="" &
 		st_global("e(cmd2)")!="stexcess") {
 		merlin_error("eta only valid prediction with family(user, llfunction())")
 	}
-	
+
 }
 
 `PS' merlin_p_getpf(`gml' gml, `SS' stat)
@@ -252,7 +254,7 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 			strk 	= strofreal(gml.model)
 			hash	= st_global("e(hfunction"+strk+")")!=""
 			hasch 	= st_global("e(chfunction"+strk+")")!=""
-			
+
 			if (hasch) {
 				if (hash) {
 					if (stat=="hazard")		return(&merlin_p_userhch_h())
@@ -273,7 +275,7 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 				if (hash) {
 					if 	(stat=="hazard")	return(&merlin_p_userh_h())
 					else if (stat=="survival")	return(&merlin_p_userh_s())
-					else if (stat=="chazard")	return(&merlin_p_userh_ch())	
+					else if (stat=="chazard")	return(&merlin_p_userh_ch())
 					else if (stat=="logchazard")	return(&merlin_p_userh_logch())
                                         else if (stat=="density")	return(&merlin_p_userh_dens())
 				}
@@ -285,10 +287,10 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
                                         else if (stat=="density")	return(&merlin_p_userlogh_dens())
 				}
 			}
-			
+
 		}
-		
-		
+
+
 	}
 }
 
@@ -301,7 +303,7 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 			gml.fixedonly = 3
 		}
 		else {
-			merlin_predict_getblups(gml)	//fills up all blups 
+			merlin_predict_getblups(gml)	//fills up all blups
 			gml.fixedonly = 2
 		}
 		//reset
@@ -310,11 +312,11 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 
 	gml.survind = 0
 	if (st_local("overoutcome")!="") {
-		
+
 		pfo = merlin_predict_overoutcome_setup(gml)
-		
+
 		if (gml.issurv[gml.model] & stand) {
-		
+
 			t 	= asarray(gml.timevars,gml.model)
 			Nt 	= rows(t)
 			Nobs	= gml.Nobs[gml.Nlevels,gml.model]
@@ -330,15 +332,15 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 			pred = merlin_predict_overoutcome(gml,pfo,pf)
 			if (stand) pred = mean(pred)
 		}
-		
+
 	}
 	else {
 		if (gml.issurv[gml.model] & stand) {
-			t 		= asarray(gml.timevars,gml.model)
-			Nt 		= rows(t)
+
+			t 	= asarray(gml.timevars,gml.model)
+			Nt 	= rows(t)
 			Nobs	= gml.Nobs[gml.Nlevels,gml.model]
-			
-			
+
 			if (gml.familys[1,1]=="cox") {
 				pred = merlin_p_cox_s_stand(gml)
 			}
@@ -348,11 +350,11 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 					asarray(gml.timevars,gml.model,J(Nobs,1,t[i]))
 					if (predtype=="marginal") {
 						pred[i] = mean(merlin_predict_marginal(1,gml,pf))
-					} 
+					}
 					else pred[i] = mean((*pf)(gml))
 				}
 			}
-			
+
 		}
 		else {
 			if (predtype=="marginal") {
@@ -361,14 +363,14 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
                         else    pred = (*pf)(gml)
 			if (stand) pred = mean(pred)
 		}
-		
+
 	}
 	return(pred)
 }
 
 //fixed portion only
 `RC' merlin_predict_fixedonly(	`gml' gml,	///
-				`PS' pf)	//	
+				`PS' pf)	//
 {
 	gml.fixedonly = 1
 	return((*pf)(gml))
@@ -376,7 +378,7 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 
 //include EB means
 `RC' merlin_predict_fitted(	`gml' gml,	///
-				`PS' pf)	//	
+				`PS' pf)	//
 {
 	gml.fixedonly = 2
 	return((*pf)(gml))
@@ -393,7 +395,7 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 //integrate over random effects
 `RC' merlin_predict_marginal(	`RS' index,	///	-level-
                                 `gml' gml,	///
-                                `PS' pf)	//	
+                                `PS' pf)	//
 {
 	gml.fixedonly = 0
         index2 = index + 1
@@ -424,20 +426,20 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 
 `RM' merlin_p_cif(`gml' gml, | `RC' t)
 {
-	
+
 	if (gml.familys[gml.model]=="cox") {
 		return(merlin_p_cox_cif(gml))
 	}
-	
+
 	not = args()==1
 	if (not) t = merlin_util_timevar(gml)
-	
+
 	refmod 	= gml.model
 
 	//get pointers to cause-specific h and ch functions -> gml.model indexes this
-	hf 		= merlin_p_getpf(gml, "hazard")
+	hf 	= merlin_p_getpf(gml, "hazard")
 	chfs 	= J(1,0,NULL)
-		
+
 	if (st_local("causes")=="") {
 		modind = J(1,0,.)
 		//assume all survival models contribute
@@ -464,28 +466,27 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 			chfs 	= chfs,merlin_p_getpf(gml, "chazard")
 		}
 	}
-	
+
 	if (Nsurvmodels==1) {
-		
 		gml.model = modind
 		pf = merlin_p_getpf(gml, "survival")
 		return(1:-(*pf)(gml,t))
-		
+
 	}
 	else {
-	
 		gml.model 	= refmod
 		Ngq 		= 30
-		gq 			= merlin_gq(Ngq,"legendre")
+		gq 		= merlin_gq(Ngq,"legendre")
 		result 		= J(gml.N,1,0)
-		qp			= t :/ 2 :* J(gml.N,1,gq[,1]') :+ t:/2
+		qp		= t :/ 2 :* J(gml.N,1,gq[,1]') :+ t:/2
 
-		for (q=1; q<=Ngq; q++) {						//cif integral
-			gml.model 	= refmod
-			haz			= (*hf)(gml,qp[,q])
-			ochres 		= J(gml.N,1,0)
+		for (q=1; q<=Ngq; q++) {	//cif integral
+			gml.model = refmod
+			haz	  = (*hf)(gml,qp[,q])
+			ochres 	  = J(gml.N,1,0)
 
-			for (k=1; k<=Nsurvmodels; k++) {			//overall cumulative hazard integral
+			//overall cumulative hazard integral
+			for (k=1; k<=Nsurvmodels; k++) {
 				gml.model = modind[k]
 				ochres = ochres :+ (*chfs[k])(gml,qp[,q])
 			}
@@ -493,23 +494,23 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 		}
 
 		gml.model 	= refmod
-		return(result)	
-	
-	}	
-	
+		return(result)
+
+	}
+
 }
 
 `RM' merlin_p_totalsurvival(`gml' gml, | `RC' t)
 {
-	
+
 	not = args()==1
 	if (not) t = merlin_util_timevar(gml)
-	
+
 	refmod 	= gml.model
 
 	//get pointers to cause-specific h and ch functions -> gml.model indexes this
 	chfs 	= J(1,0,NULL)
-		
+
 	if (st_local("causes")=="") {
 		modind = J(1,0,.)
 		//assume all survival models contribute
@@ -536,16 +537,16 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 			chfs 	= chfs,merlin_p_getpf(gml, "chazard")
 		}
 	}
-	
+
 	if (Nsurvmodels==1) {
-		
+
 		gml.model = modind
 		pf = merlin_p_getpf(gml, "survival")
 		return(1:-(*pf)(gml,t))
-		
+
 	}
 	else {
-	
+
 		gml.model 	= refmod
 		result 		= J(gml.N,1,0)
 
@@ -555,9 +556,9 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 			result = result :+ (*chfs[k])(gml,t)
 		}
 		gml.model = refmod
-		return(exp(-result))	
-	}	
-	
+		return(exp(-result))
+	}
+
 }
 
 `RM' merlin_p_timelost(`gml' gml, | `RC' t)
@@ -565,20 +566,20 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 	if (gml.familys[gml.model]=="cox") {
 		return(merlin_p_cox_timelost(gml))
 	}
-	
+
 	not = args()==1
 	if (not) t = merlin_util_timevar(gml)
 
 	Ngq 	= 30
 	gq 		= merlin_gq(Ngq,"legendre")
 	qp		= t :/ 2 :* J(gml.N,1,gq[,1]') :+ t:/2
-	
+
 	//integrate cif
 	result 	= J(gml.N,1,0)
-	for (q=1; q<=Ngq; q++) {						
+	for (q=1; q<=Ngq; q++) {
 		result = result :+ merlin_p_cif(gml,qp[,q]) :* gq[q,2] :* t :/ 2
 	}
-	return(result)	
+	return(result)
 }
 
 `RM' merlin_p_totaltimelost(`gml' gml, | `RC' t)
@@ -586,7 +587,7 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 	not = args()==1
 	if (not) t = merlin_util_timevar(gml)
 	refmod 	= gml.model
-	
+
 	if (st_local("causes")=="") {
 		modind 	= J(1,0,.)
 		//assume all survival models contribute
@@ -611,16 +612,16 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 			if (!issurv) merlin_error("model "+strofreal(modm)+" in causes() is not a survival model")
 			modind 	= modind,modm
 		}
-		
+
 	}
-	
+
 	//total time lost
 	result 	= J(gml.N,1,0)
-	for (q=1; q<=Nsurvmodels; q++) {		
+	for (q=1; q<=Nsurvmodels; q++) {
 		gml.model 	= modind[q]
 		result 		= result :+ merlin_p_timelost(gml,t)
 	}
-	return(result)	
+	return(result)
 }
 
 `RM' merlin_p_rmst(`gml' gml, | `RC' t)
@@ -628,14 +629,14 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 	not = args()==1
 	if (not) t = merlin_util_timevar(gml)
 
-	return(t:-merlin_p_totaltimelost(gml,t))	
+	return(t:-merlin_p_totaltimelost(gml,t))
 }
 
 `PS' merlin_predict_overoutcome_setup(`gml' gml)
 {
 	overmod = strtoreal(st_local("overmodel"))
 	f	 	= gml.familys[overmod]
-		
+
 	if 	(f=="bernoulli") return(&merlin_p_over_bernoulli_mu())
 	else if (f=="gaussian")  return(&merlin_p_over_gaussian_mu())
 }
@@ -674,8 +675,8 @@ void merlin_predict_getblups(`gml' gml, | `RS' getses)
 		swap(oldlnl,newlnl)
 		(*gml.Pupdateip)(gml)
 		newlnl = quadsum(merlin_logl_panels(1,gml),1)
-	}	
-	
+	}
+
 	//now store them -> unnecessary extra step, but o/w would have to change updateip function
 	if (getses) {
 		for (i=1; i<=1; i++) {
@@ -683,7 +684,7 @@ void merlin_predict_getblups(`gml' gml, | `RS' getses)
 			baseweights 	= asarray(gml.baseGHweights,i)
 			L_i 		= asarray(gml.Li_ip,gml.qind) * baseweights
 			numer 		= asarray(gml.Li_ip,gml.qind) :/ L_i
-			baseweights2 	= baseweights'	
+			baseweights2 	= baseweights'
 			cholV		= cholesky(asarray(gml.vcvs,i))
 			for (j=1; j<=gml.Nobs[i,1]; j++) {
 				ipij 		= cholV * asarray(gml.aghip,(i,j))
@@ -700,7 +701,7 @@ void merlin_predict_getblups(`gml' gml, | `RS' getses)
 			baseweights 	= asarray(gml.baseGHweights,i)
 			L_i 		= asarray(gml.Li_ip,gml.qind) * baseweights
 			numer 		= asarray(gml.Li_ip,gml.qind) :/ L_i
-			baseweights2 	= baseweights'	
+			baseweights2 	= baseweights'
 			cholV		= cholesky(asarray(gml.vcvs,i))
 			for (j=1; j<=gml.Nobs[i,1]; j++) {
 				ipij 		= cholV * asarray(gml.aghip,(i,j))
@@ -709,13 +710,13 @@ void merlin_predict_getblups(`gml' gml, | `RS' getses)
 			asarray(gml.blups,i,blups)
 		}
 	}
-	
+
 }
 
 `RM' merlin_predict_getspecblups(`gml' gml)
 {
 	gml.blups = asarray_create("real",1)
-	
+
 	stata("tempvar specb spectouse")
 	if (st_local("blupif")!="") {
 		stata("qui gen byte "+st_local("spectouse")+ "= "+st_global("e(levelvars)")+"=="+st_local("panel")+" & "+st_local("touse")+" & "+st_local("blupif"))
