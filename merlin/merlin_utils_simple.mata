@@ -58,8 +58,8 @@ mata:
 {	
 	tmpmod 		= gml.model
 	gml.model 	= mod
-	if 	(args()==3)	result = merlin_util_update_xz_simple(gml,t,t0)
-	else if (args()==2)     result = merlin_util_update_xz_simple(gml,t)
+	if 	(args()==4)	result = merlin_util_update_xz_simple(gml,t,t0)
+	else if (args()==3)     result = merlin_util_update_xz_simple(gml,t)
 	else 		        result = asarray(gml.X,gml.model)[merlin_get_index(gml),]
 	gml.model 	= tmpmod
 	return(result)
