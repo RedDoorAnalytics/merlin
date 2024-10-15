@@ -53,7 +53,7 @@ mata:
 
 	//now add in elements which contain [] i.e. random effects or EV etc. that will need updating dynamically
 	bindex 	= asarray(gml.X_bindex,(mod,2))
-	
+
 	if (bindex!=J(2,0,.)) {
 
 		Ncmps 	= gml.Ncmps[mod]		        //# of components
@@ -63,7 +63,7 @@ mata:
 
 		if (hast) 	nobs = rows(t) 
 		else 		nobs = merlin_get_nobs(gml)
-	
+
 		if (!gml.Nrelevels) {
 			
 			//if no random effects, the design matrix x can just be directly updated with any interactions
@@ -75,43 +75,58 @@ mata:
 				eltype	 	= asarray(gml.elindex,(mod,c))
 				
 				for (el=1; el<=Nels[c]; el++) {
-					elmod = asarray(gml.elinfo,(mod,c,el))
-					if (eltype[el]==4) {												//EV[]	
+					if (eltype[el]==4) {				//EV[]	
+						elinfo = asarray(gml.elinfo,(mod,c,el))
+						elmod = asarray(elinfo,1)
 						if (hast) 	x[,Xindex]  = x[,Xindex] :* merlin_util_expval_mod(gml,elmod,t)
 						else 		x[,Xindex]  = x[,Xindex] :* merlin_util_expval_mod(gml,elmod)
 						continue
 					}
-					else if (eltype[el]==5) {											//iEV[]
+					else if (eltype[el]==5) {			//iEV[]
+						elinfo = asarray(gml.elinfo,(mod,c,el))
+						elmod = asarray(elinfo,1)
 						if (hast) 	x[,Xindex]  = x[,Xindex] :* merlin_util_expval_integ_mod(gml,elmod,t)
 						else 		x[,Xindex]  = x[,Xindex] :* merlin_util_expval_integ_mod(gml,elmod)
 						continue
 					}
-					else if (eltype[el]==6) {											//dEV[]
+					else if (eltype[el]==6) {			//dEV[]
+						elinfo = asarray(gml.elinfo,(mod,c,el))
+						elmod = asarray(elinfo,1)
 						if (hast) 	x[,Xindex]  = x[,Xindex] :* merlin_util_expval_deriv_mod(gml,elmod,t)
 						else 		x[,Xindex]  = x[,Xindex] :* merlin_util_expval_deriv_mod(gml,elmod)
 						continue
 					}
-					else if (eltype[el]==7) {											//d2EV[]
+					else if (eltype[el]==7) {			//d2EV[]
+						elinfo = asarray(gml.elinfo,(mod,c,el))
+						elmod = asarray(elinfo,1)
 						if (hast) 	x[,Xindex]  = x[,Xindex] :* merlin_util_expval_deriv2_mod(gml,elmod,t)
 						else 		x[,Xindex]  = x[,Xindex] :* merlin_util_expval_deriv2_mod(gml,elmod)
 						continue
 					}
-					else if (eltype[el]==10) {											//XB[]		
+					else if (eltype[el]==10) {			//XB[]
+						elinfo = asarray(gml.elinfo,(mod,c,el))
+						elmod = asarray(elinfo,1)
 						if (hast) 	x[,Xindex]  = x[,Xindex] :* merlin_util_xzb_mod(gml,elmod,t)
 						else 		x[,Xindex]  = x[,Xindex] :* merlin_util_xzb_mod(gml,elmod)
 						continue
 					}
-					else if (eltype[el]==11) {											//iXB[]
+					else if (eltype[el]==11) {			//iXB[]
+						elinfo = asarray(gml.elinfo,(mod,c,el))
+						elmod = asarray(elinfo,1)
 						if (hast) 	x[,Xindex]  = x[,Xindex] :* merlin_util_xzb_integ_mod(gml,elmod,t)
 						else 		x[,Xindex]  = x[,Xindex] :* merlin_util_xzb_integ_mod(gml,elmod)
 						continue
 					}
-					else if (eltype[el]==12) {											//dXB[]
+					else if (eltype[el]==12) {			//dXB[]
+						elinfo = asarray(gml.elinfo,(mod,c,el))
+						elmod = asarray(elinfo,1)
 						if (hast) 	x[,Xindex]  = x[,Xindex] :* merlin_util_xzb_deriv_mod(gml,elmod,t)
 						else 		x[,Xindex]  = x[,Xindex] :* merlin_util_xzb_deriv_mod(gml,elmod)
 						continue
 					}
-					else if (eltype[el]==13) {											//d2XB[]
+					else if (eltype[el]==13) {			//d2XB[]
+						elinfo = asarray(gml.elinfo,(mod,c,el))
+						elmod = asarray(elinfo,1)
 						if (hast) 	x[,Xindex]  = x[,Xindex] :* merlin_util_xzb_deriv2_mod(gml,elmod,t)
 						else 		x[,Xindex]  = x[,Xindex] :* merlin_util_xzb_deriv2_mod(gml,elmod)
 					}	
@@ -132,10 +147,10 @@ mata:
 				NX		= cols(Xindex)
 				eltype	 	= asarray(gml.elindex,(mod,c))
 				contrib 	= 0
-				
+
 				//random effects must be handled first
 				for (el=1; el<=Nels[c]; el++) {
-					if (eltype[el]==2) {											//random effect
+					if (eltype[el]==2) {	//random effect
 						xb2	= J(nobs,1,0)
 						xb2base = x[,Xindex] :* gml.myb[,Bindex]
 						for (re=1;re<=NX;re++) {
@@ -161,57 +176,71 @@ mata:
 				//-> one for each colvector
 				//-> other eltypes first (that are all colvectors)
 				for (el=1; el<=Nels[c]; el++) {
-					if (eltype[el]==4) {												//EV[]	
-						elmod = asarray(gml.elinfo,(mod,c,el))
-						if (hast) 	xb2 = xb2 :* merlin_util_expval_mod(gml,elmod,t)
-						else 		xb2 = xb2 :* merlin_util_expval_mod(gml,elmod)
+					if (eltype[el]==4) {				//EV[]	
+						elinfo = asarray(gml.elinfo,(mod,c,el))
+						elmod = asarray(elinfo,1)
+						if (asarray(elinfo,2)) { 
+							ttime = J(nobs,1,asarray(elinfo,3))
+							xb2 = xb2 :* merlin_util_expval_mod(gml,elmod,ttime)
+						}
+						else {
+							if (hast) 	xb2 = xb2 :* merlin_util_expval_mod(gml,elmod,t)
+							else 		xb2 = xb2 :* merlin_util_expval_mod(gml,elmod)
+						}
 						contrib = 1
 						continue
 					}
-					else if (eltype[el]==5) {											//iEV[]
-						elmod = asarray(gml.elinfo,(mod,c,el))
+					else if (eltype[el]==5) {	//iEV[]
+						elinfo = asarray(gml.elinfo,(mod,c,el))
+						elmod = asarray(elinfo,1)
 						if (hast) 	xb2 = xb2 :* merlin_util_expval_integ_mod(gml,elmod,t)
 						else 		xb2 = xb2 :* merlin_util_expval_integ_mod(gml,elmod)
 						contrib = 1
 						continue
 					}
-					else if (eltype[el]==6) {											//dEV[]
-						elmod = asarray(gml.elinfo,(mod,c,el))
+					else if (eltype[el]==6) {	//dEV[]
+						elinfo = asarray(gml.elinfo,(mod,c,el))
+						elmod = asarray(elinfo,1)
 						if (hast) 	xb2 = xb2 :* merlin_util_expval_deriv_mod(gml,elmod,t)
 						else 		xb2 = xb2 :* merlin_util_expval_deriv_mod(gml,elmod)
 						contrib = 1
 						continue
 					}
-					else if (eltype[el]==7) {											//d2EV[]
-						elmod = asarray(gml.elinfo,(mod,c,el))
+					else if (eltype[el]==7) {	//d2EV[]
+						elinfo = asarray(gml.elinfo,(mod,c,el))
+						elmod = asarray(elinfo,1)
 						if (hast) 	xb2 = xb2 :* merlin_util_expval_deriv2_mod(gml,elmod,t)
 						else 		xb2 = xb2 :* merlin_util_expval_deriv2_mod(gml,elmod)
 						contrib = 1
 						continue
 					}
-					else if (eltype[el]==10) {											//XB[]		
-						elmod = asarray(gml.elinfo,(mod,c,el))
+					else if (eltype[el]==10) {	//XB[]
+						elinfo = asarray(gml.elinfo,(mod,c,el))
+						elmod = asarray(elinfo,1)
 						if (hast) 	xb2 = xb2 :* merlin_util_xzb_mod(gml,elmod,t)
 						else 		xb2 = xb2 :* merlin_util_xzb_mod(gml,elmod)
 						contrib = 1
 						continue
 					}
-					else if (eltype[el]==11) {											//iXB[]
-						elmod = asarray(gml.elinfo,(mod,c,el))
+					else if (eltype[el]==11) {	//iXB[]
+						elinfo = asarray(gml.elinfo,(mod,c,el))
+						elmod = asarray(elinfo,1)
 						if (hast) 	xb2 = xb2 :* merlin_util_xzb_integ_mod(gml,elmod,t)
 						else 		xb2 = xb2 :* merlin_util_xzb_integ_mod(gml,elmod)
 						contrib = 1
 						continue
 					}
-					else if (eltype[el]==12) {											//dXB[]
-						elmod = asarray(gml.elinfo,(mod,c,el))
+					else if (eltype[el]==12) {	//dXB[]
+						elinfo = asarray(gml.elinfo,(mod,c,el))
+						elmod = asarray(elinfo,1)
 						if (hast) 	xb2 = xb2 :* merlin_util_xzb_deriv_mod(gml,elmod,t)
 						else 		xb2 = xb2 :* merlin_util_xzb_deriv_mod(gml,elmod)
 						contrib = 1
 						continue
 					}
-					else if (eltype[el]==13) {											//d2XB[]
-						elmod = asarray(gml.elinfo,(mod,c,el))
+					else if (eltype[el]==13) {	//d2XB[]
+						elinfo = asarray(gml.elinfo,(mod,c,el))
+						elmod = asarray(elinfo,1)
 						if (hast) 	xb2 = xb2 :* merlin_util_xzb_deriv2_mod(gml,elmod,t)
 						else 		xb2 = xb2 :* merlin_util_xzb_deriv2_mod(gml,elmod)
 						contrib = 1
@@ -313,7 +342,7 @@ mata:
 	hast = args()==3
 	if (!hast) {
 		if (gml.issurv[gml.model] | gml.tvarnames[gml.model]!="") {
-			t 		= merlin_util_timevar(gml)
+			t 	= merlin_util_timevar(gml)
 			hast 	= 1
 		}
 	}
