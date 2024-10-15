@@ -49,6 +49,7 @@ do ./cert/level1.do
 do ./cert/bivariate_jm.do
 do ./cert/weighted_cumulative_jm.do
 do ./cert/jm_ltruncated.do
+do ./cert/cert_jm_ev_timeopt.do
 
 
 //============================================================================//
