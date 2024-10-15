@@ -451,16 +451,22 @@ void merlin_xz_var_update(`GMLS' gml, `RS' c, `RS' el, `SS' v, `RC' val)
 	
 }
 
-`RM' merlin_xz_EV(`GMLS' gml, `RS' i, `RS' j, | `RC' t)
-{
-	k = gml.model
-        //update index for appropriate outcome
-	gml.model = k2 = asarray(gml.elinfo,(gml.model,i,j))					
-	if (args()==3) 	res =  (*gml.invlinks[k2])(merlin_util_xzb(gml))
-	else 		res =  (*gml.invlinks[k2])(merlin_util_xzb(gml,t))	
-	gml.model = k
-	return(res)
-}
+// `RM' merlin_xz_EV(`GMLS' gml, `RS' i, `RS' j, | `RC' t)
+// {
+// 	k = gml.model
+//         //update index for appropriate outcome
+// 	info = asarray(gml.elinfo,(gml.model,i,j))
+// 	gml.model = k2 = asarray(info,1)
+// 	asarray(info,1), asarray(info,2), asarray(info,3)
+// 	if (asarray(info,2)) {
+// 		nobs = merlin_get_nobs(gml,k)
+// 		t = J(nobs,1,asarray(info,3))
+// 	}
+// 	if (args()==3) 	res =  (*gml.invlinks[k2])(merlin_util_xzb(gml))
+// 	else 		res =  (*gml.invlinks[k2])(merlin_util_xzb(gml,t))	
+// 	gml.model = k
+// 	return(res)
+// }
 
 `RM' merlin_xz_iEV(`GMLS' gml, `RS' i, `RS' j, | `RC' t)
 {
