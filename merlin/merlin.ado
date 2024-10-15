@@ -1,7 +1,10 @@
-*! version 2.4.7  25sep2024
+*! version 2.5.0  15oct2024
 
 /*
 History
+15oct2024 v2.5.0:
+- added EV[, time()] for fixed time expected value association structure
+- bug fixes
 25sep2024 v2.4.7:
 - touse fix in predict
 19sep2024 v2.4.6:
