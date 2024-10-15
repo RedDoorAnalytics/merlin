@@ -180,7 +180,7 @@ mata:
 `RM' merlin_gaussian_expval(`gml' gml, | `RC' t)
 {
 	if (args()==1) 	return((*gml.invlinks[gml.model])(merlin_util_xzb(gml)))
-	else 			return((*gml.invlinks[gml.model])(merlin_util_xzb(gml,t)))
+	else 		return((*gml.invlinks[gml.model])(merlin_util_xzb(gml,t)))
 }
 
 `RM' merlin_gaussian_resid(`gml' gml, `RC' t)
