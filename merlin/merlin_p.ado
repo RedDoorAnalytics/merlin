@@ -341,7 +341,7 @@ program Predict
                         mata: st_local("ims",subinstr(st_local("ims"),"mvaghermite","ghermite"))
                 }
                 local intmethods intmethod(`ims')
-                local intpoints intpoints(`imp')
+                local intpoints intpoints(`ips')
         }
         
         if "`chintpoints'"!="" {

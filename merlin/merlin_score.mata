@@ -155,7 +155,7 @@ void merlin_score_panels(`gml' gml, `RC' lnfi, `RM' G)
 			}
 		}
 	}
- 
+	
 	resq = resq :* asarray(gml.Li_ip,gml.qind) 
 
 	if (gml.usegh[index]) {			//GHQ

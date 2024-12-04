@@ -55,7 +55,7 @@ void merlin_setup_get_expratefile(`gml' gml)
 void merlin_setup_exph1(`gml' gml)
 {
 	gml.survind = 1
-	mod			= gml.model
+	mod = gml.model
 	if (gml.hasbh[mod,1]) {
 		asarray(gml.bhazards,mod,st_data(.,st_local("bhaz"+strofreal(mod)),gml.modeltouses[mod]))
 	}
@@ -74,7 +74,7 @@ void merlin_setup_exph1(`gml' gml)
 
 		matchedrate = J(N,1,.)
 		for (i=1;i<=N;i++) {
-			index 			= match_row_index(exprate[|1,2\.,.|],x[i,])
+			index 		= match_row_index(exprate[|1,2\.,.|],x[i,])
 			matchedrate[i] 	= exprate[index,1]
 		}
 		
@@ -98,12 +98,12 @@ void merlin_setup_exph1(`gml' gml)
 
 `RC' merlin_setup_expH(`gml' gml, `RM' exprate, `RM' x)
 {
-	mod				= gml.model
-	t 				= merlin_util_depvar(gml)[,1]
-	N 				= merlin_get_nobs(gml)
+	mod	= gml.model
+	t 	= merlin_util_depvar(gml)[,1]
+	N 	= merlin_get_nobs(gml)
 	
-	matchedH		= J(N,1,0)
-	matchvars 		= tokens(st_local("matchby"+strofreal(mod)))
+	matchedH	= J(N,1,0)
+	matchvars 	= tokens(st_local("matchby"+strofreal(mod)))
 	ageyearindex 	= selectindex(matchvars:==("_age")),selectindex(matchvars:==("_year"))
 	
 	for (i=1;i<=N;i++) {
@@ -111,7 +111,7 @@ void merlin_setup_exph1(`gml' gml)
  		//build rate at each year from entry to exit
 		index = match_row_index(exprate[|1,2\.,.|],x[i,])
  		//how many years
-		ft 		= floor(t[i])
+		ft 	= floor(t[i])
 		extrat	= t[i]:-ft
 
 		if (ft) {
@@ -134,34 +134,36 @@ void merlin_setup_exph1(`gml' gml)
 void merlin_setup_exph2(`gml' gml)
 {
 	gml.survind 	= 2
-	mod				= gml.model
-	exprate 		= asarray(gml.bhazards,(mod,0))
-	matchvars 		= tokens(st_local("matchby"+strofreal(gml.model)))
+	mod		= gml.model
+	exprate 	= asarray(gml.bhazards,(mod,0))
+	matchvars 	= tokens(st_local("matchby"+strofreal(gml.model)))
 	ageyearindex 	= selectindex(matchvars:==("_age")),selectindex(matchvars:==("_year"))
-	x				= st_data(.,matchvars,gml.modeltouses[mod])[merlin_get_index(gml),]
+	x		= st_data(.,matchvars,gml.modeltouses[mod])[merlin_get_index(gml),]
 	
 	if (gml.familys[mod]=="rp" | gml.familys[mod]=="logchazard") {
 		asarray(gml.bhazards,(mod,4),merlin_setup_expH(gml,exprate,x))
 	}
 	else {
 	
-		t 			= merlin_util_depvar(gml)
-		N 			= merlin_get_nobs(gml)
+		t 	= merlin_util_depvar(gml)
+		N 	= merlin_get_nobs(gml)
 		
 		//need to add t to x[,1] and x[,2] -> age and year
 		//then floor it to get the expected rate at the age, year previous
 
 		Ngq 	= gml.chip
 		chq2 	= J(N,Ngq,0)
-		gq 		= merlin_gq(Ngq,"legendre")
-		if (gml.hasltrunc[gml.model]) 	qp2 = (t[,1]:-t[,3]) :/ 2 :* J(N,1,gq[,1]') :+ (t[,1]:+t[,3]):/2
-		else							qp2 = t[,1] :/ 2 :* J(N,1,gq[,1]') :+ t[,1]:/2
+		gq 	= merlin_gq(Ngq,"legendre")
+		if (gml.hasltrunc[gml.model]) {
+			qp2 = (t[,1]:-t[,3]) :/ 2 :* J(N,1,gq[,1]') :+ (t[,1]:+t[,3]):/2
+		}
+		else    qp2 = t[,1] :/ 2 :* J(N,1,gq[,1]') :+ t[,1]:/2
 		//now get matched rate
 
 		matchedrate = J(N,Ngq,.)
 		for (q=1;q<=Ngq;q++) {
-			xq 					= x
-			xq[,ageyearindex] 	= floor(xq[,ageyearindex] :+ qp2[,q])
+			xq = x
+			xq[,ageyearindex] = floor(xq[,ageyearindex] :+ qp2[,q])
 			for (i=1;i<=N;i++) {
 				matchedrate[i,q] = exprate[match_row_index(exprate[|1,2\.,.|],xq),1]
 			}
@@ -174,7 +176,7 @@ void merlin_setup_exph2(`gml' gml)
 
 `RC' survsim_get_exprate(`RM' exprate, `RM' x, `RR' t)
 {
-	N 			= rows(x)
+	N 		= rows(x)
 	x[,(1,2)] 	= floor(x[,(1,2)] :+ t)
 	//now get matched rate
 	matchedrate = J(N,1,.)
