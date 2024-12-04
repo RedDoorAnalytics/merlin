@@ -111,7 +111,7 @@ void merlin_build_xz(`gml' gml)
 				pos = strpos(dv,"#")
 				if (pos) {
 					dv2 = substr(dv,1,pos-1)
-					dv 	= substr(dv,pos+1,.)
+					dv  = substr(dv,pos+1,.)
 				}
 				else dv2 = dv
 
@@ -131,7 +131,7 @@ void merlin_build_xz(`gml' gml)
 			
 			//update design matrix
 			refbeqn = beqn
-			X 		= X,merlin_build_variables(gml,mod,c,eltype,elsyntax,xeqn,beqn,at)
+			X = X,merlin_build_variables(gml,mod,c,eltype,elsyntax,xeqn,beqn,at)
 
 			cmpxindex[c,2] 	= xeqn-1
 			cmpbindex[c,2] 	= beqn-1
@@ -235,11 +235,11 @@ merlin_build_els()
 
 `RS' merlin_get_element_codes(`gml' gml, `RS' mod, `SS' dv2)
 {
-	el 			= dv2
+	el 		= dv2
 	hassquareb	= strpos(el,"[")
 	hasroundb	= strpos(el,"(")
 	
-	if (hassquareb & !hasroundb) {
+	if (hassquareb) {
 		if (strpos(el,"EV")) {
 			if (substr(el,1,2)=="EV")	return(4)
 			else if (strpos(el,"iEV")) 	return(5)
@@ -283,9 +283,11 @@ merlin_build_els()
 `RS' merlin_get_X_index_flag(`SS' dv2)
 {
 	hassquareb	= strpos(dv2,"[")
-	hasroundb	= strpos(dv2,"(")
-	if (hassquareb & !hasroundb) 	return(1)
-	else							return(0)
+// 	hasroundb	= strpos(dv2,"(")
+// 	if (hassquareb & !hasroundb) 	return(1)
+// 	else				return(0)
+	if (hassquareb) return(1)
+	else		return(0)
 }
 
 `RM' merlin_build_variables(`gml' gml, `RS' mod, `RS' c, `RC' eltype, `SC' elsyntax, `RS' xeqn, `RS' beqn, `SS' at)
@@ -309,7 +311,7 @@ merlin_build_els()
 			nextvars = merlin_setup_re(gml,mod,c,el,elsyntax[el])
 			noinit = 1		//don't include in fixed effects starting value fit
 		}
-		else if (eltype[el]==4 | eltype[el]==5 | eltype[el]==6 | eltype[el]==7 ) {
+		else /*if (eltype[el]==4 | eltype[el]==5 | eltype[el]==6 | eltype[el]==7 )*/ {
 			nextvars = merlin_setup_expval(gml,mod,c,el,elsyntax[el])
 			noinit = 1
 		}
@@ -518,12 +520,13 @@ void merlin_get_cmp_labels(`gml' gml)
 
 `SS' merlin_cmp_label(`SS' el)
 {
-	hassquareb	= strpos(el,"[")
-
+	hassquareb = strpos(el,"[")
 	if (hassquareb) {
-	
 		if (strpos(el,"EV")) 	{
-			if (substr(el,1,2)=="EV")	return("EV[]")
+			if (substr(el,1,2)=="EV"){
+				if (strpos(el,"time(")) return("EV[,time()]")
+				else return("EV[]")
+			}
 			else if (strpos(el,"iEV")) 	return("iEV[]")
 			else if (strpos(el,"dEV")) 	return("dEV[]")
 			else if (strpos(el,"d2EV")) 	return("d2EV[]")
@@ -534,20 +537,15 @@ void merlin_get_cmp_labels(`gml' gml)
 			else if (strpos(el,"dXB")) 	return("dXB[]")
 			else if (strpos(el,"d2XB")) 	return("d2XB[]")
 		}
-		else {
-			return(el)	//re
-		}
-			
+		else return(el)	//re
 	}
 	else {	
-		
 		if 	(strpos(el,"mf("))      return("mf()")	//user-defined function
 		else if (strpos(el,"rcs("))     return("rcs()")	//rcs function
 		else if (strpos(el,"fp("))      return("fp()")	//fp function
 		else if (strpos(el,"bs(")) 	return("bs()")	//bs function
 		else if (strpos(el,"pc(")) 	return("pc()")	//pc function
 		else 				return(el)	//varname
-
 	}
 	
 }

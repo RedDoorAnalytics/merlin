@@ -1,12 +1,12 @@
-//local drive Z:/
+//source paths
 local drive /Users/michael/My Drive/software
 cd "`drive'/merlin"
-adopath ++ "./merlin"
-adopath ++ "./stmerlin"
-adopath ++ "./jm"
-clear all
+adopath ++ "`drive'/merlin"
+adopath ++ "`drive'/merlin/merlin"
+adopath ++ "`drive'/stmerlin/stmerlin"
 
-do ./build/buildmlib.do
+clear all
+tr:do ./build/buildmlib.do
 mata mata clear
 
 pr drop _all

@@ -493,16 +493,30 @@ mata:
 
 `RC' merlin_setup_expval(`gml' gml, `RS' mod, `RS' i, `RS' Nels, `SS' el)
 {	
-	kpos 	= strpos(el,"[")													//get response varname
+	info 	= asarray_create("real",1)
+	kpos 	= strpos(el,"[")	//get response varname
 	kpos2 	= strpos(el,"]")
-	y 		= substr(el,kpos+1,kpos2-kpos-1)
-	if (strpos(y,",")) y = substr(y,1,strpos(y,",")-1)							//strip off , options if there
-
-	for (k=1;k<=gml.Nmodels;k++) {												//get response varname index and store
-		if (st_local("response"+strofreal(k))==y | strofreal(k)==y) {
-			asarray(gml.elinfo,(mod,i,Nels),k)									//store info
+	y 	= substr(el,kpos+1,kpos2-kpos-1)
+	if (strpos(y,",")) {
+		opts = substr(y,strpos(y,",")+1,kpos2)
+		y = substr(y,1,strpos(y,",")-1) //strip off , options if there
+		//get time()
+		stata("local 0 , "+opts)
+		stata("syntax , [Time(string) IMPUTE]")
+		if (st_local("time")!="") {
+			time = strtoreal(st_local("time"))
+			asarray(info,2,1) //flag
+			asarray(info,3,time)
 		}
 	}
+	else asarray(info,2,0) //time() flag
+
+	for (k=1;k<=gml.Nmodels;k++) {	//get response varname index and store
+		if (st_local("response"+strofreal(k))==y | strofreal(k)==y) {
+			asarray(info,1,k) //response index
+		}
+	}
+	asarray(gml.elinfo,(mod,i,Nels),info) //store info
 	return(J(gml.N /*obs[gml.Nlevels,gml.model]*/,1,1))
 }
 

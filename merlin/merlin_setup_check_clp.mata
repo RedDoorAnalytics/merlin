@@ -56,7 +56,7 @@ void merlin_cmp_errorchecks(`gml' gml,`SS' dv)
 
 	if (reind>1) {
 		errprintf("Only one random effect element is allowed in each component\n")
-		exit(1986)
+		exit(198)
 	}
 	
 }
@@ -71,14 +71,14 @@ void merlin_dvcheck(`gml' gml,`SS' dv2, `RS' varind, reind)
 	pos2 = strpos(dv2,"]")	
 	if ((!pos1 & pos2) | (pos1 & !pos2)) {
 		errprintf("Missing [ or ]\n")
-		exit(1986)
+		exit(198)
 	}
 
 	pos5 = strpos(dv2,"(")
 	pos6 = strpos(dv2,")")	
 	if ((!pos5 & pos6) | (pos5 & !pos6)) {
 		errprintf("Missing ( or )\n")
-		exit(1986)
+		exit(198)
 	}
 	
 	if (strpos(dv2,"@")) {														//check at
@@ -283,13 +283,13 @@ void merlin_check_name(`SS' dv)
 	if (!hasm) {
 		errprintf("invalid latent variable specification;\n")
 		errprintf("random effect names must start with M\n")
-		exit(1986)	
+		exit(198)	
 	}
 	num = substr(dv,2,1)
 	if (strtoreal(num)==.) {
 		errprintf("invalid latent variable specification;\n")
 		errprintf("M must be followed by an integer\n")
-		exit(1986)	
+		exit(198)	
 	}
 }
 
@@ -301,7 +301,7 @@ void merlin_check_pipes(`SS' dv, `RS' pos1, `RS' pos2)
 	if (strpos(newvar,"<") & strpos(newvar,">")) {
 		errprintf("invalid latent variable specification;\n")
 		errprintf("both '<' and '>' detected within the same specification\n")
-		exit(1986)
+		exit(198)
 	}
 }
 
@@ -332,7 +332,7 @@ void merlin_confirm_idvars(`SS' dv, `RS' pos1, `RS' pos2)
 	}	
 	if (ind1 & ind2) {
 		errprintf("Can't have both > and < in level specifier\n")
-		exit(1986)
+		exit(198)
 	}
 }
 
@@ -343,20 +343,28 @@ void merlin_confirm_depvar(`gml' gml,dv,pos1,pos2)
 	yvar = substr(dv,pos1+1,pos2-pos1-1)
 	//strip of , options if there
 	if (strpos(yvar,",")) {
-		op = strtrim(substr(yvar,strpos(yvar,",")+1,.))
-		if (op!="impute") {
-			merlin_error("Invalid option in EV[]")
+		if (substr(dv,1,2)!="EV") {
+			merlin_error("options not supported in "+dv)
 		}
+		op = strtrim(substr(yvar,strpos(yvar,",")+1,.))
+		
+		stata("local 0 , "+op)
+		stata("syntax , [TIME(string) IMPUTE]")
+		if (st_local("time")!="") {
+			time = strtoreal(st_local("time"))
+			if (time<0) merlin_error("Invalid time()")
+		}
+				
 		yvar = substr(yvar,1,strpos(yvar,",")-1)
 	}
 
 	//check yvar is a response variable for a model which isn't the current, stored in gml.model
 	if (gml.familys[gml.model]=="null") 	resp = "_merlin_null"
-	else 									resp = tokens(st_local("response"+strofreal(gml.model)))[1]		//accounts for survival
+	else resp = tokens(st_local("response"+strofreal(gml.model)))[1]		//accounts for survival
 
 	if (yvar==resp | yvar==strofreal(gml.model)) {
 		errprintf("You can't include the expected value of an outcome as a dependent variable in its own model\n")
-		exit(1986)
+		exit(198)
 	}
 	flag = 1
 
