@@ -2,7 +2,8 @@
 // cert. script for merlin
 
 //source paths
-local drive /Users/michael/Library/CloudStorage/OneDrive-RedDoorAnalyticsAB/software
+local drive /Users/michael/Library/CloudStorage
+local drive `drive'/OneDrive-RedDoorAnalyticsAB/software
 cd "`drive'/merlin"
 adopath ++ "`drive'/merlin"
 adopath ++ "`drive'/merlin/merlin"
