@@ -92,7 +92,6 @@ void merlin_prolog(	`RR' b,		///
 // 	}
 	
 	p->iter = (*p).iter :+ 1
-	
 }
 
 /*

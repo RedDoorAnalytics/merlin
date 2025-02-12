@@ -1,5 +1,6 @@
 //local drive Z:/
-local drive /Users/Michael/Documents
+local drive /Users/michael/Library/CloudStorage
+local drive `drive'/OneDrive-RedDoorAnalyticsAB/software
 cd "`drive'/merlin"
 adopath ++ "./merlin"
 clear all
@@ -9,18 +10,10 @@ mata mata clear
 
 use https://www.mjcrowther.co.uk/data/jm_example.dta, clear
 
-timer clear
-timer on 1
-merlin 	(stime trt 												///
-				EV[logb]										///
-				, timevar(stime) family(weib, failure(died))) 	///
-		(logb 	fp(time,pow(1))									///
-				fp(time,pow(1))#M2[id]@1						///
-						M1[id]@1								///
-				, timevar(time) family(gaussian)) 				///
-		, trace
-timer off 1
-timer list
+
+merlin 	(stime EV[logb] , timevar(stime) family(weib, failure(died))) ///
+	(logb  fp(time,pow(1))	M1[id]@1, timevar(time) family(gaussian)) ///
+	, intmethod(gh) intpoints(7)
 
 
 gen tp = round(prothrombin)
