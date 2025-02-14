@@ -122,7 +122,7 @@ void merlin_gf(	`TS' M,
 	expres 	= exp(res :- c)
 
 	if (gml.adapt[index] | gml.todo) asarray(gml.Li_ip,gml.qind,expres) 
-
+	
 	if (gml.usegh[index]) {			//GHQ
 		if (gml.hasweights[index]) 	return(asarray(gml.weights,(index,1)) :* (c :+ log(expres * asarray(gml.baseGHweights,index))))
 		else 				return(c :+ log(expres * asarray(gml.baseGHweights,index)))
