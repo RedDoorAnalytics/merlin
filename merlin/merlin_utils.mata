@@ -152,7 +152,7 @@ mata:
 				for (el=1; el<=Nels[c]; el++) {
 					if (eltype[el]==2) {	//random effect
 						xb2	= J(nobs,1,0)
-						xb2base = x[,Xindex] :* gml.myb[,Bindex]
+						xb2base = x[,Xindex] :* gml.myb[,Bindex]	//coefficient
 						for (re=1;re<=NX;re++) {
 							if (gml.fixedonly==0) {
 								xb2 = xb2 :+ xb2base[,re] :* merlin_xz_b(gml,c,el,re)

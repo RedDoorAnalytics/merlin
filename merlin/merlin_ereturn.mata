@@ -50,7 +50,6 @@ void merlin_ereturn(`SS' GML)
 		}
 		stata("ereturn local failure"+strk+" "+gml.failures[k])
 		stata("ereturn local bhazard"+strk+" "+gml.bhvarnames[k])
-		stata("ereturn local latents"+strk+" ")
 		if (gml.hasltrunc[k]) 	stata("ereturn local ltruncated"+strk+" "+gml.ltruncated[1,k])
 		if (gml.haslint[k]) 	stata("ereturn local linterval"+strk+" "+gml.linterval[1,k])
 		stata("ereturn local timevar"+strk+" "+gml.tvarnames[k])
