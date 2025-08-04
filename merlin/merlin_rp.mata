@@ -362,7 +362,7 @@ mata:
 `RM' merlin_rp_ch(`gml' gml, `RC' t, | `RC' t0)
 {
 	if (args()==2) 	return(exp(merlin_rp_logch(gml,t)))
-	else 			return(exp(merlin_rp_logch(gml,t,t0)))
+	else 		return(exp(merlin_rp_logch(gml,t,t0)))
 }
 
 `RM' merlin_rp_s(`gml' gml, `RC' t)

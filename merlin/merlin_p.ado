@@ -41,6 +41,7 @@ program Predict
 				STANDardise		                ///
 				STANDIF(string)				///
 				PANel(numlist max=1)	                ///
+				SKIPMARGinal				///
                                                                         ///
 				CI			                ///
 				REPS(numlist int max=1 >=10)		///
@@ -402,6 +403,7 @@ program Predict
         local globalopts `globalopts' blupif(`blupif')
         local globalopts `globalopts' `passtmat'
         local globalopts `globalopts' `debug' 
+	local globalopts `globalopts' `skipmarginal'
         
         //not included -> 
         // at(),at1(),at2()
@@ -667,8 +669,8 @@ program Predict
                         if "`mlcns'" != "" {
                                 cap constraint drop `mlcns'
                         }
-
-                        mata: merlin_predict("`GML'","`newvar'",        ///
+                        
+			mata: merlin_predict("`GML'","`newvar'",        ///
                                         "`touse'","`STAT'","`xbtype'")
 
                 }	

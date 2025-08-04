@@ -358,7 +358,13 @@ void merlin_predict_error_check(`gml' gml, `SS' stat)
 		}
 		else {
 			if (predtype=="marginal") {
-                                pred = merlin_predict_marginal(1,gml,pf)
+				if (st_local("skipmarginal")=="") {
+					pred = merlin_predict_marginal(1,gml,pf)
+				}
+				else {
+					gml.fixedonly = 0
+					pred = (*pf)(gml)
+				}
                         }
                         else    pred = (*pf)(gml)
 			if (stand) pred = mean(pred)
