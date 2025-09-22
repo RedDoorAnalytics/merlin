@@ -36,26 +36,31 @@ real matrix gw_logh(transmorphic gml, real matrix t)
 	beta  = exp(merlin_util_ap(gml,1))
 	return(logalpha :+ log(t) :- log(beta:^2 :+ t:^2))
 }
+real matrix gw_logh2(transmorphic gml, real matrix t)
+{
+	logalpha = merlin_util_xzb(gml)
+	beta  = exp(merlin_util_xzb_mod(gml,2))
+	return(logalpha :+ log(t) :- log(beta:^2 :+ t:^2))
+}
 end
-
-
-merlin (stime trt rcs(age,df(3)) bmi ,  ///
-        family(user, failure(died) loghfunction(gw_logh) nap(1))) 	
 
 clear
 set obs 100000
 gen trt = runiform()>0.5
-local alpha = 1
-local beta = 10
-survsim stime died, hazard(`alpha' :* {t} :/ ((`beta'):^2 :+ {t}:^2))   ///
+local alpha 1
+local lnbeta 2 + 0.5 * trt
+survsim stime died, hazard(`alpha' :* {t} :/ (exp(`lnbeta'):^2 :+ {t}:^2))   ///
                         cov(trt -0.5) maxtime(20)
-merlin (stime trt , family(user, failure(died) loghfunction(gw_logh) nap(1))) 	
+merlin (stime trt , family(user, failure(died) loghfunction(gw_logh2))) 		///
+	(trt, family(null))
 est store m1
 
 exit
 
 range tvar 0 20 100
-predict h1, hazard zeros timevar(tvar)
-predict s1, survival zeros timevar(tvar)
+predict h0, hazard zeros timevar(tvar)
+predict s0, survival zeros timevar(tvar)
+predict h1, hazard timevar(tvar) at(trt 1)
+predict s1, survival timevar(tvar) at(trt 1)
 
 predictms , singleevent model(m1) hazard survival timevar(tvar)

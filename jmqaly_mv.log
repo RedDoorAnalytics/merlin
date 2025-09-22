@@ -1,0 +1,157 @@
+
+. clear
+
+. // set the seed for reproducibility
+. set seed 7254
+
+. // we simulate a dataset with 500 patients
+. set obs 500
+Number of observations (_N) was 0, now 500.
+
+. // generate an id variable
+. gen id = _n
+
+. // generate binary treatment group with 50% assignment probability
+. gen trt = runiform()>0.5
+
+. // generate random interecpts and slopes for the longitudinal outcomes
+. gen u0 = rnormal(0,0.1)
+
+. gen u1 = rnormal(0,0.01)
+
+. gen u2 = rnormal(0,0.5)
+
+. 
+. // simulate survival times from a joint model
+. //-> baseline Weibull
+. //-> direct effect of treatment on survival if log HR = -0.5
+. //-> current value of biomarker 1 influences survival
+. //-> current value of biomarker 2 influences survival
+. //-> admin. censoring at 10 years
+. survsim stime died, hazard(0.15:*1.2:*{t}:^0.2 :*                       ///
+>         exp(                                                            ///
+>                 -0.2 :* (0.7 :+ u0 :+ (-0.05:+u1 :+ 0.01:*trt):*{t})    ///
+>                 :+ 0.2 :* (0.1 :+ u2 :+ (0.1 :- 0.01:*trt):*{t}))       ///
+>         )                                                               ///
+>         covariates(trt -0.5)                                            ///
+>         maxt(10)                                                        //
+Warning: 71 survival times were above the upper limit of maxtime()
+         They have been set to maxtime()
+         You can identify them by _survsim_rc = 3
+
+. 
+. // create repeated measures, up to 10 per patient
+. expand 10
+(4,500 observations created)
+
+. // generate time of observation (annual)
+. bys id : gen time = _n-1
+
+. // remove any observations that occur after event/censoring
+. drop if time>stime
+(2,428 observations deleted)
+
+. 
+. // simulate "QOL"
+. gen xb1 = 0.7 + u0 + (-0.05+u1 + 0.01*trt) * time 
+
+. gen qol = rnormal(xb1,0.5)
+
+. 
+. // simulate "other biomarker"
+. gen xb2 = 0.1 + u2 + (0.1 - 0.01*trt) * time 
+
+. gen logpsa = rnormal(xb2,0.5)
+
+. 
+. // remove repeat survival times (caused by use of expand)
+. bys id (time) : replace stime   = . if _n>1
+(2072 real changes made, 2072 to missing)
+
+. bys id (time) : replace died    = . if _n>1
+(2,072 real changes made, 2,072 to missing)
+
+. 
+. // fit the true model with merlin
+. merlin  (stime                                  /// survival times
+>                 trt                             /// treatment on survival
+>                 M3[id]                  /// current value of y1
+>                 M1[id]                  /// current value of y2
+>                 , family(rp, df(1) fail(died))  /// Weibull baseline
+>                 timevar(stime))                 /// time variable
+>         (qol                                    /// QOL measurements
+>                 time                            /// fixed effect of time
+>                 time#trt                        /// time by treat. interaction
+>                 time#M2[id]@1                   /// random effect on time
+>                 M1[id]@1                        /// random intercept
+>                 , family(gaussian)              /// Gaussian model
+>                 timevar(time))                  /// time variable
+>         (logpsa                                 /// other biomarker measurements
+>                 time                            /// fixed effect of time
+>                 time#trt                        /// time by treat. interaction
+>                 M3[id]@1                        /// random intercept
+>                 , family(gaussian)              /// Gaussian model
+>                 timevar(time))                  /// time variable
+>                 , covariance(unstructured)      //  VCV of random effects
+variables created: _rcs1_1 to _rcs1_1
+
+Fitting fixed effects model:
+
+Fitting full model:
+
+Iteration 0:  Log likelihood = -6108.6335  (not concave)
+Iteration 1:  Log likelihood = -6038.3257  (not concave)
+Iteration 2:  Log likelihood = -5456.9672  
+Iteration 3:  Log likelihood = -5404.6419  
+Iteration 4:  Log likelihood =  -5398.712  
+Iteration 5:  Log likelihood = -5398.1027  
+Iteration 6:  Log likelihood =   -5398.05  
+Iteration 7:  Log likelihood = -5398.0479  
+Iteration 8:  Log likelihood = -5398.0478  
+
+Mixed effects regression model                           Number of obs = 2,572
+Log likelihood = -5398.0478
+------------------------------------------------------------------------------
+             | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+stime:       |            
+         trt |  -.6638807   .0996623    -6.66   0.000    -.8592151   -.4685462
+      M3[id] |   .2331508   .1042066     2.24   0.025     .0289095     .437392
+      M1[id] |   -.292598   .8427755    -0.35   0.728    -1.944408    1.359212
+       _cons |  -.3361477   .0686011    -4.90   0.000    -.4706034    -.201692
+-------------+----------------------------------------------------------------
+qol:         |            
+        time |  -.0425086   .0060016    -7.08   0.000    -.0542715   -.0307456
+    time#trt |   .0030191   .0059381     0.51   0.611    -.0086193    .0146575
+ time#M2[id] |          1          .        .       .            .           .
+      M1[id] |          1          .        .       .            .           .
+       _cons |   .6850955   .0166643    41.11   0.000      .652434     .717757
+  sd(resid.) |    .509063    .008185                      .4932709    .5253607
+-------------+----------------------------------------------------------------
+logpsa:      |            
+        time |   .1035879   .0073169    14.16   0.000      .089247    .1179288
+    time#trt |  -.0066848   .0086489    -0.77   0.440    -.0236364    .0102668
+      M3[id] |          1          .        .       .            .           .
+       _cons |   .1153521   .0289347     3.99   0.000     .0586411    .1720631
+  sd(resid.) |    .496299   .0076933                      .4814471     .511609
+-------------+----------------------------------------------------------------
+id:          |            
+      sd(M1) |   .1286278   .0350565                      .0753956    .2194437
+      sd(M2) |   .0156351   .0136987                      .0028075     .087072
+      sd(M3) |   .5442744   .0212792                      .5041258    .5876204
+ corr(M2,M1) |  -.6762496   .2967393                     -.9557098    .2444782
+ corr(M3,M1) |  -.0488409   .1410099                     -.3148453    .2242772
+ corr(M3,M2) |   .1519243   .3035953                      -.426806    .6423733
+------------------------------------------------------------------------------
+    Warning: Baseline spline coefficients not shown - use ml display
+
+. 
+. // estimate marginal QALYs across a lifetime horizon
+. // and the difference in QALYs
+. cap drop tvar
+
+. cap range tvar 0 30 100
+
+. jmqaly qaly, at(trt 1) at2(trt 0) qolmodel(2) timevar(tvar)
+
+. log close

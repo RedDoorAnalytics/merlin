@@ -26,6 +26,8 @@ void merlin_starting_values(`gml' gml)
 	from 	= st_local("from")
 	hasfrom = from!=""
 
+	if (st_global("c(prefix)")=="morgana") return
+	
 	if (hasfrom) {
 	
 		stata("confirm matrix "+from)

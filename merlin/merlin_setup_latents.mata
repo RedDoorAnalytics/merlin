@@ -103,9 +103,6 @@ void merlin_parse_latents(`gml' gml)
 								}
 							}
 							else latsup = latsup\substr(dv2,1,posid-1)
-							//store level
-							//store re index(es)
-							asarray(gml.elinfo,(j,c,el),i)
 						}
 						el++
 					}	
@@ -146,7 +143,9 @@ void merlin_parse_latents(`gml' gml)
 								lat = substr(dv2,1,posid-1)
 								reindex = reindex\selectindex(lat:==uniqlats)
 							}
-							asarray(ellatinfo,2,reindex)	//store re index(es)
+							asarray(ellatinfo,2,reindex)	
+							//store level
+							//store re index(es)
 							asarray(gml.elinfo,(j,c,el),ellatinfo)
 						}
 						el++
