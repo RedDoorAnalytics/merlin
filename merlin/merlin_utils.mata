@@ -39,23 +39,21 @@ mata:
 	hast 	= args()>=2
 	hast0 	= args()==3
 	mod 	= gml.model
-1
+
 	if (hast) {
 		if (hast0)	x = merlin_util_xz_simple(gml,t,t0)
 		else 		x = merlin_util_xz_simple(gml,t)
 	}
 	else 			x = merlin_util_xz_simple(gml)
-99
-head(x)
+
 	bindex	= asarray(gml.X_bindex,(mod,1))
-	bindex
 	xb 	= x[,bindex[1,]] * gml.myb[bindex[2,]]'
-2
+
 	if (gml.simple[mod]) return(xb)
-3
+
 	//now add in elements which contain [] i.e. random effects or EV etc. that will need updating dynamically
 	bindex 	= asarray(gml.X_bindex,(mod,2))
-4
+
 	if (bindex!=J(2,0,.)) {
 
 		Ncmps 	= gml.Ncmps[mod]		        //# of components
