@@ -14,7 +14,7 @@ local RC		real colvector
 local RR		real rowvector
 local PM		pointer matrix
 
-version 15.1
+version 19.5
 
 mata:
 
@@ -32,8 +32,8 @@ struct merlin_ereturn_struct {
 struct merlin_struct {
 
 // [op] - denotes an option which is not always completely filled in
-
-	`pgml' Pgml			//self-pointer
+	
+	`SS' GML
 	
 	//model definition
 	`TR' y				//response variables
@@ -229,7 +229,8 @@ void merlin_setup(`SS' GML,`SS' touse)
 	`gml' 	gml
 	
 	//initialise
-	gml.Pgml = pGML = crexternal(GML)
+	pGML = crexternal(GML)
+	gml.GML = GML
 	
 	//core setup
 	merlin_setup_core(gml,touse)
@@ -1183,15 +1184,6 @@ void merlin_setup_mleqns(`gml' gml)
 void merlin_cleanup(`SS' GML)
 {
 	rmexternal(GML)
-// 	`pgml' PM
-// 	11
-// 	PM = findexternal(GML)
-// 	PM
-// 	22
-// 	PM->Pgml = NULL
-// 	33
-// 	rmexternal(GML)
-// 	44
 }
 
 end

@@ -110,8 +110,12 @@ void merlin_mc_update(	`GML' gml, 	///
                         `TS' M, 	///
                         `RS' lnl) 
 {
+	
+	`pGML' Pgml
+	Pgml = findexternal(gml.GML)
+	
 	//increase in steps of ?
-	gml.Pgml->ndim[lev] = gml.ndim[lev] = gml.ndim[lev] + 2			//must update external and passed struct
+	Pgml->ndim[lev] = gml.ndim[lev] = gml.ndim[lev] + 2	//must update external and passed struct
 	merlin_update_Zs_bs(gml,lev)	//!!re-write to add 3 new draws to existing
 }
 
@@ -162,15 +166,18 @@ void merlin_gh_update_ip(`GML' gml)
 
 void merlin_gh_post_ip(`GML' gml)
 {
+	`pGML' Pgml
+	Pgml = findexternal(gml.GML)
+	
 	for (i=1; i<=1; i++) {
-		asarray(gml.Pgml->stackednodes,i,asarray(gml.stackednodes,i))
+		asarray(Pgml->stackednodes,i,asarray(gml.stackednodes,i))
 		for (j=1; j<=gml.Nobs[i,1]; j++) {
-			asarray(gml.Pgml->aghip,(i,j),asarray(gml.aghip,(i,j)))
+			asarray(Pgml->aghip,(i,j),asarray(gml.aghip,(i,j)))
 		}
 		for (r=1; r<=gml.Nres[i]; r++) {
-			asarray(gml.Pgml->aghip2,(i,r),asarray(gml.aghip2,(i,r)))
+			asarray(Pgml->aghip2,(i,r),asarray(gml.aghip2,(i,r)))
 		}
-		asarray(gml.Pgml->aghlogl,i,asarray(gml.aghlogl,i))
+		asarray(Pgml->aghlogl,i,asarray(gml.aghlogl,i))
 	}
 }	
 
@@ -216,12 +223,15 @@ void merlin_ltrunc_gh_update_ip(`GML' gml)
 
 void merlin_ltrunc_gh_post_ip(`GML' gml)
 {
+	`pGML' Pgml
+	Pgml = findexternal(gml.GML)
+	
 	for (i=1; i<=1; i++) {
 		Nobs = max(gml.Nsurv[,7])
-		asarray(gml.Pgml->stackednodes_lt,i,asarray(gml.stackednodes_lt,i))
-		for (j=1; j<=Nobs; j++) 	asarray(gml.Pgml->aghip_lt,(i,j),asarray(gml.aghip_lt,(i,j)))
-		for (r=1;r<=gml.Nres[i];r++) 	asarray(gml.Pgml->aghip2_lt,(i,r),asarray(gml.aghip2_lt,(i,r)))
-		asarray(gml.Pgml->aghlogl_lt,i,asarray(gml.aghlogl_lt,i))
+		asarray(Pgml->stackednodes_lt,i,asarray(gml.stackednodes_lt,i))
+		for (j=1; j<=Nobs; j++) 	asarray(Pgml->aghip_lt,(i,j),asarray(gml.aghip_lt,(i,j)))
+		for (r=1;r<=gml.Nres[i];r++) 	asarray(Pgml->aghip2_lt,(i,r),asarray(gml.aghip2_lt,(i,r)))
+		asarray(Pgml->aghlogl_lt,i,asarray(gml.aghlogl_lt,i))
 	}
 }
 

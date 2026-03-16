@@ -30,7 +30,9 @@ void merlin_gf(	`TS' M,
 	if (gml.Nrelevels) 	{		//has random effects
 
                 //logl
-		gml.Pgml->lnfi1 = lnfi = merlin_logl_panels(1,gml)
+		`Pgml' Pgml
+		Pgml = findexternal(gml.GML)
+		Pgml->lnfi1 = lnfi = merlin_logl_panels(1,gml)
 
                 //marginal ltruncation (survival)
 		if (gml.hasmargltrunc) {

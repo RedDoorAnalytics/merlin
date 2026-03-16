@@ -1,7 +1,10 @@
-*! version 2.5.0  15oct2024
+*! version 2.6.0  16mar2026
 
 /*
 History
+16mar2026 v2.6.0:
+- memory leak fix
+- now requires Stata v19.5
 15oct2024 v2.5.0:
 - added EV[, time()] for fixed time expected value association structure
 - bug fixes
@@ -305,7 +308,7 @@ History
 */
 
 program merlin, eclass 
-        version 15.1
+        version 19.5
 
         if replay() {
                 if "`e(cmd)'" != "merlin" {

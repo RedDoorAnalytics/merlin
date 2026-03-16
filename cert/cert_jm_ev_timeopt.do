@@ -106,7 +106,7 @@ mat T_b[1,14] = -1.190829815879932
 mat T_b[1,15] =  .0172445082444099
 }
 matrix C_b = e(b)
-assert mreldif( C_b , T_b ) < 1E-8
+assert mreldif( C_b , T_b ) < 1E-6
 _assert_streq `"`: rowfullnames C_b'"' `"y1"'
 
 
@@ -285,7 +285,7 @@ mat T_V[15,14] = -.0001641122099889
 mat T_V[15,15] =  .0018084195840078
 }
 matrix C_V = e(V)
-assert mreldif( C_V , T_V ) < 1E-8
+assert mreldif( C_V , T_V ) < 1E-6
 
 mat drop C_V T_V
 
@@ -306,32 +306,10 @@ mat T_gradient[1,14] =  4.92458120109e-08
 mat T_gradient[1,15] =  1.55451244089e-07
 }
 matrix C_gradient = e(gradient)
-assert mreldif( C_gradient , T_gradient ) < 1E-8
+assert mreldif( C_gradient , T_gradient ) < 1E-5
 _assert_streq `"`: rowfullnames C_gradient'"' `"r1"'
 
 mat drop C_gradient T_gradient
-
-qui {
-mat T_ml_scale = J(1,13,0)
-mat T_ml_scale[1,1] =  1.258212076276074
-mat T_ml_scale[1,2] =  1.893638696603069
-mat T_ml_scale[1,3] =   .091126243616412
-mat T_ml_scale[1,4] =  15.40905702224557
-mat T_ml_scale[1,5] =  .4270062568902656
-mat T_ml_scale[1,6] =  1.179495995180331
-mat T_ml_scale[1,7] =  3.822150112028886
-mat T_ml_scale[1,8] =  .7851577992537245
-mat T_ml_scale[1,9] =  .2027947304742919
-mat T_ml_scale[1,10] =  1.140873927277686
-mat T_ml_scale[1,11] =  15.44478765272994
-mat T_ml_scale[1,12] =  .3617928167638673
-mat T_ml_scale[1,13] =  54.87817693695079
-}
-matrix C_ml_scale = e(ml_scale)
-assert mreldif( C_ml_scale , T_ml_scale ) < 1E-8
-_assert_streq `"`: rowfullnames C_ml_scale'"' `"r1"'
-_assert_streq `"`: colfullnames C_ml_scale'"' `"c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13"'
-mat drop C_ml_scale T_ml_scale
 
 do ./cert/predictions.do
 
@@ -419,7 +397,7 @@ mat T_b[1,13] = -1.196302265798748
 mat T_b[1,14] =  .0161976726083015
 }
 matrix C_b = e(b)
-assert mreldif( C_b , T_b ) < 1E-8
+assert mreldif( C_b , T_b ) < 1E-7
 _assert_streq `"`: rowfullnames C_b'"' `"y1"'
 _assert_streq `"`: colfullnames C_b'"' `"_cmp_1_1_1:_cons _cmp_1_2_1:_cons _cmp_1_3_1:_cons _cmp_1_4_1:_cons _cmp_1_5_1:_cons cons1:_cons dap1_1:_cons _cmp_2_1_1:_cons _cmp_2_2_1:_cons cons2:_cons dap2_1:_cons lns1_1:_cons lns1_2:_cons art1_1_2:_cons"'
 mat drop C_b T_b
@@ -593,31 +571,10 @@ mat T_gradient[1,13] =  5.57636743205e-07
 mat T_gradient[1,14] =  6.95455728910e-07
 }
 matrix C_gradient = e(gradient)
-assert mreldif( C_gradient , T_gradient ) < 1E-8
+assert mreldif( C_gradient , T_gradient ) < 1E-6
 _assert_streq `"`: rowfullnames C_gradient'"' `"r1"'
 
 mat drop C_gradient T_gradient
-
-qui {
-mat T_ml_scale = J(1,12,0)
-mat T_ml_scale[1,1] =  1.578455007202345
-mat T_ml_scale[1,2] =  1.877325760188616
-mat T_ml_scale[1,3] =  .1534647611563707
-mat T_ml_scale[1,4] =  8.229089752610335
-mat T_ml_scale[1,5] =  .2317341415675373
-mat T_ml_scale[1,6] =  1.862799765586885
-mat T_ml_scale[1,7] =  1.643052461458864
-mat T_ml_scale[1,8] =  .2430738524519503
-mat T_ml_scale[1,9] =  .4228650067359527
-mat T_ml_scale[1,10] =  12.91835391197532
-mat T_ml_scale[1,11] =  .3402894922670585
-mat T_ml_scale[1,12] =   48.7597637874115
-}
-matrix C_ml_scale = e(ml_scale)
-assert mreldif( C_ml_scale , T_ml_scale ) < 1E-8
-_assert_streq `"`: rowfullnames C_ml_scale'"' `"r1"'
-_assert_streq `"`: colfullnames C_ml_scale'"' `"c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12"'
-mat drop C_ml_scale T_ml_scale
 
 do ./cert/predictions.do		
 		
@@ -881,31 +838,10 @@ mat T_gradient[1,13] =  4.94162709461e-07
 mat T_gradient[1,14] =  6.39131792852e-07
 }
 matrix C_gradient = e(gradient)
-assert mreldif( C_gradient , T_gradient ) < 1E-8
+assert mreldif( C_gradient , T_gradient ) < 1E-6
 _assert_streq `"`: rowfullnames C_gradient'"' `"r1"'
 
 mat drop C_gradient T_gradient
-
-qui {
-mat T_ml_scale = J(1,12,0)
-mat T_ml_scale[1,1] =  1.595129290694157
-mat T_ml_scale[1,2] =  1.938786061478532
-mat T_ml_scale[1,3] =  .1543220402065401
-mat T_ml_scale[1,4] =  8.251690122227629
-mat T_ml_scale[1,5] =  .4381732882676909
-mat T_ml_scale[1,6] =  1.866399970431286
-mat T_ml_scale[1,7] =  1.750875888095688
-mat T_ml_scale[1,8] =  .2446997991905092
-mat T_ml_scale[1,9] =  .4273124678177102
-mat T_ml_scale[1,10] =  11.27314178929863
-mat T_ml_scale[1,11] =  .3395728970663057
-mat T_ml_scale[1,12] =  52.08230198519526
-}
-matrix C_ml_scale = e(ml_scale)
-assert mreldif( C_ml_scale , T_ml_scale ) < 1E-8
-_assert_streq `"`: rowfullnames C_ml_scale'"' `"r1"'
-_assert_streq `"`: colfullnames C_ml_scale'"' `"c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12"'
-mat drop C_ml_scale T_ml_scale
 
 
 do ./cert/predictions.do

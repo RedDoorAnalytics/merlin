@@ -2,7 +2,7 @@
 // cert. script for merlin
 
 //source paths
-local drive /Users/michael/Library/CloudStorage
+local drive /Users/michael.crowther/Library/CloudStorage
 local drive `drive'/OneDrive-RedDoorAnalyticsAB/software
 cd "`drive'/merlin"
 adopath ++ "`drive'/merlin"
@@ -21,6 +21,7 @@ do ./cert/ologit-oprobit
 
 //survival
 do ./cert/streg.do
+do ./cert/cert_cox.do
 do ./cert/strcs.do
 do ./cert/stpm2.do
 do ./cert/pwexp.do
